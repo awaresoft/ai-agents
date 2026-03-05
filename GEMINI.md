@@ -4,20 +4,25 @@ This file provides guidance to Gemini when working with code in this repository.
 
 ## Directory Overview
 
-This repository stores Claude agents for different engineering purposes. Each agent is a specialized expert designed to handle specific software engineering domains and tasks. The agents are defined in Markdown files located in the `.claude/agents/` directory.
+This repository stores Claude agents, OpenCode agents, and Codex skills for different engineering purposes. Each agent is a specialized expert designed to handle specific software engineering domains and tasks.
 
-## Key Files
+## Key Directories and Files
 
-- `.claude/agents/`: This directory contains the agent definitions.
-  - `backend-architect.md`: Domain-Driven Design expert for backend architecture decisions, microservices design, and event-driven systems.
-  - `backend-engineer.md`: General backend development guidance.
-  - `devops-engineer.md`: DevOps and infrastructure automation.
-  - `e2e-test-engineer.md`: End-to-end testing strategies and implementation.
-  - `principal-engineer.md`: Senior-level code review and architectural guidance.
-  - `secops-auditor.md`: Security operations and compliance auditing.
-- `CLAUDE.md`: Provides instructions for Claude on how to interact with this repository.
-- `README.md`: The main README file for the project.
+### 🤖 Agent Definitions
+- **`.claude/agents/`**: Core definitions for Claude.
+  - `backend-architect.md`, `backend-engineer.md`, `devops-engineer.md`, `e2e-test-engineer.md`, `frontend-architect.md`, `frontend-engineer.md`, `principal-engineer.md`, `secops-auditor.md`, `staff-engineer.md`, `team-manager.md`, `ux-ui-architect.md`.
+- **`.config/opencode/agents/`**: Definitions for OpenCode.
+  - `backend-architect.md`, `backend-engineer.md`, `devops-engineer.md`, `e2e-test-engineer.md`, `frontend-architect.md`, `frontend-engineer.md`, `secops-auditor.md`, `ux-ui-architect.md`.
+
+### 🛠️ Skill Definitions
+- **`.claude/skills/`**: Specialized skills for Claude (`code-review`, `tech-arch-research`).
+- **`.codex/skills/`**: Codex-compatible skill definitions (`code-review`, `tech-arch-research`).
+
+### 📘 Core Documentation
+- **`AGENTS.md`**: Central directory and guidelines for all agents and skills.
+- **`CLAUDE.md`**: Claude-specific instructions and agent listings.
+- **`README.md`**: Main repository introduction.
 
 ## Usage
 
-The contents of this directory are used to configure Claude agents. When creating or modifying agents, follow the established format and guidelines outlined in `CLAUDE.md`.
+The contents of this directory are used to configure and provision AI agents. When creating or modifying agents, follow the established format (YAML frontmatter + structured sections) and guidelines outlined in `AGENTS.md`.
