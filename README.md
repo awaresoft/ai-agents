@@ -47,3 +47,18 @@ Centralized hub for AI agent definitions and reusable skills across Claude, Open
 - `.config/opencode/skills/` - OpenCode skill definitions
 - `.codex/agents/` - Codex agent definitions
 - `.codex/skills/` - Codex skill definitions
+
+## Local Sync
+
+Use `sync-local-agents.sh` to copy the repository's current agents and skills into your local tool directories.
+
+```bash
+./sync-local-agents.sh
+./sync-local-agents.sh --dry-run
+./sync-local-agents.sh --delete
+./sync-local-agents.sh --platform opencode
+```
+
+- `--dry-run` previews changes without writing files.
+- `--delete` removes local files that no longer exist in this repository.
+- `--platform` limits the sync to `claude`, `opencode`, or `codex`.
