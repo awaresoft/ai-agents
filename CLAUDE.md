@@ -4,11 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This repository stores Claude and OpenCode agents for different engineering purposes. Each agent is a specialized expert designed to handle specific software engineering domains and tasks.
+This repository stores Claude, OpenCode, and Codex agents for different engineering and content purposes. Each agent is a specialized expert designed to handle specific domains and tasks.
 
 ## Agent Structure
 
-All agents are stored in `.claude/agents/` (for Claude) and `.config/opencode/agents/` (for OpenCode) as markdown files with YAML frontmatter containing:
+All agents are stored in `.claude/agents/` (for Claude), `.config/opencode/agents/` (for OpenCode), and `.codex/agents/` (for Codex) as markdown files with YAML frontmatter containing:
 - `name`: Agent identifier
 - `description`: When and how to use the agent with examples
 - `model`: Claude model to use (typically sonnet)
@@ -18,6 +18,7 @@ All agents are stored in `.claude/agents/` (for Claude) and `.config/opencode/ag
 
 - **backend-architect.md**: DDD, Microservices design, and architectural guidance.
 - **backend-engineer.md**: Implementation of services, APIs, and domain logic.
+- **content-writer.md**: Technical blog strategy and writing with strong hooks, attention retention, SEO awareness, and conversion-minded editorial execution.
 - **devops-engineer.md**: Infrastructure as Code, CI/CD, and orchestration.
 - **e2e-test-engineer.md**: Playwright E2E testing and QA.
 - **frontend-architect.md**: High-level technical strategy for web apps.
@@ -38,6 +39,16 @@ All agents are stored in `.claude/agents/` (for Claude) and `.config/opencode/ag
 - **seo-content-strategy**: Search-intent, internal linking, and topical authority planning.
 - **ai-search-optimization**: AI Overview and answer-engine optimization workflow.
 - **seo-measurement-observability**: SEO KPI and crawl observability framework.
+- **technical-blog-writing**: Technical article structure, clarity, credibility, and developer-focused storytelling.
+- **attention-retention-writing**: Hooks, pacing, transitions, and ethical read-through optimization.
+- **blog-editorial-strategy**: Audience-fit content planning, positioning, and content-program design.
+
+## Content Guidance
+
+Use `content-writer.md` when the task involves blog posts, thought leadership, technical explainers, comparison articles, or product-adjacent educational content. Combine it with:
+- `technical-blog-writing` for draft quality and article structure
+- `attention-retention-writing` for stronger openings and better reader flow
+- `blog-editorial-strategy` for audience targeting, topic framing, and editorial planning
 
 ## Agent Development Guidelines
 

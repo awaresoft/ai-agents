@@ -16,6 +16,10 @@ Centralized hub for AI agent definitions and reusable skills across Claude, Open
 - SecOps Auditor - Security architecture, threat analysis, and OWASP compliance
 - SEO Inspector - Technical SEO, content architecture, AI search readiness, and discoverability audits
 
+### Content & Growth Roles
+
+- Content Writer - Technical blog strategy and writing with strong hooks, retention techniques, SEO awareness, and conversion-minded editorial execution
+
 ### Leadership Roles (Claude Only)
 
 - Principal Engineer - Strategic technical leadership and cross-stack reviews
@@ -31,6 +35,9 @@ Centralized hub for AI agent definitions and reusable skills across Claude, Open
 - SEO Content Strategy - Search-intent planning, internal linking, and topical authority
 - AI Search Optimization - AI Overviews, LLM retrieval, and citation readiness guidance
 - SEO Measurement and Observability - KPI design, crawl monitoring, and AI visibility tracking
+- Technical Blog Writing - Clear, credible, developer-focused article writing with strong structure and examples
+- Attention Retention Writing - Hooks, pacing, transitions, and ethical engagement techniques for stronger read-through
+- Blog Editorial Strategy - Topic framing, audience alignment, internal linking, and content-program planning for technical blogs
 
 ## Locations
 
