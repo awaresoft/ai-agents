@@ -4,9 +4,12 @@ This repository serves as a centralized hub for AI agent definitions and special
 
 ## 🤖 Available Agents
 
+`it-task-master` is the default orchestrator for day-to-day usage. It evaluates task type and then delegates execution to the most relevant specialist agent.
+
 ### Engineering Roles
 | Agent | Primary Purpose | Location |
 |-------|-----------------|----------|
+| **IT Task Master** | Default orchestrator that routes tasks to the most relevant specialist agent. | `.claude/`, `.config/opencode/` |
 | **Backend Architect** | DDD, Microservices design, and high-level backend strategy. | `.claude/`, `.config/opencode/` |
 | **Backend Engineer** | Implementation of services, APIs, and domain logic in Node.js/TS. | `.claude/`, `.config/opencode/` |
 | **Frontend Architect** | Technical leads for web architecture, data flow, and project structure. | `.claude/`, `.config/opencode/` |
@@ -57,10 +60,19 @@ Skills are reusable logic modules located in `.claude/skills/`, `.config/opencod
 ### Development Workflow
 1. **Persona Consistency**: Every agent starts with YAML frontmatter (`name`, `description`, `model`, `color`).
 2. **Standard Headings**: Use `Core Principles`, `Technical Standards`, `Workflow`, and `Review Checklist`.
-3. **Verification**:
+3. **Task Routing**: Use `it-task-master` as the default orchestrator, then hand off to specialist agents by task type.
+4. **Tool/Library Documentation Verification (Context7 MCP)**:
+   - When implementing with a specific tool, library, or framework, first check whether its documentation is available via Context7 MCP.
+   - If available, use Context7 docs to verify APIs and usage patterns, and rely on them during implementation decisions.
+   - Practical flow: resolve library ID → query docs → implement.
+5. **UI Design & Prototyping (Stitch MCP)**:
+   - Stitch MCP is available for UI design and prototyping workflows.
+   - Use it to create/list projects, generate screens from text, edit screens,
+     generate design variants, and retrieve project/screen details.
+6. **Verification**:
    - Run `markdownlint "**/*.md"` to ensure formatting consistency.
    - Use `rg --files .claude/agents | sort` to verify the agent pool.
-4. **Commits**: Use imperative summaries: `Add [agent-name]` or `Improve [agent-name]`.
+7. **Commits**: Use imperative summaries: `Add [agent-name]` or `Improve [agent-name]`.
 
 ### Security
 - Never embed secrets or sensitive company data in agent prompts.

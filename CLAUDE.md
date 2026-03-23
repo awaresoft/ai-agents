@@ -14,8 +14,13 @@ All agents are stored in `.claude/agents/` (for Claude), `.config/opencode/agent
 - `model`: Claude model to use (typically sonnet)
 - `color`: UI color for the agent
 
+## Default Orchestration
+
+`it-task-master.md` is the default orchestrator agent for this repository. Start with it when a task is broad, mixed, or unclear: it classifies the task type and routes work to the right specialist agent.
+
 ## Available Claude Agents
 
+- **it-task-master.md**: Default orchestrator that selects the best specialist agent for each task.
 - **backend-architect.md**: DDD, Microservices design, and architectural guidance.
 - **backend-engineer.md**: Implementation of services, APIs, and domain logic.
 - **content-writer.md**: Technical blog strategy and writing with strong hooks, attention retention, SEO awareness, and conversion-minded editorial execution.
@@ -58,3 +63,21 @@ When creating or modifying agents:
 - Define specific expertise areas and responsibilities.
 - Maintain consistent communication style and quality standards.
 - Include quality controls and self-verification steps for complex agents.
+
+## Tool/Library Documentation Verification (Context7 MCP)
+
+When working with a specific tool, library, or framework, first check whether documentation is available via Context7 MCP. If available, use Context7 docs to verify APIs and usage patterns, and rely on them during implementation decisions.
+
+Practical flow: resolve library ID → query docs → implement.
+
+## UI Design & Prototyping (Stitch MCP)
+
+Stitch MCP is available for UI design and prototyping workflows.
+
+Use Stitch MCP to:
+
+- create and list projects
+- generate screens from text prompts
+- edit existing screens
+- generate design variants
+- retrieve project and screen details
