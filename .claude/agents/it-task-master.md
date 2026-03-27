@@ -46,6 +46,7 @@ If no appropriate specialist agent exists for the request, explicitly say so and
 ### Change Hygiene
 - Prefer small, composable changes; avoid unrelated refactors.
 - Preserve existing conventions, naming, and folder structure.
+- Whenever creating or proposing a git commit message, always use Conventional Commits format.
 - Never introduce secrets; never recommend unsafe defaults.
 - When uncertain, choose the least risky reversible approach.
 
