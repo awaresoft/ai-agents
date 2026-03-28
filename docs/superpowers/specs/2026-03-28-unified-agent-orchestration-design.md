@@ -50,7 +50,7 @@ ai-agents/
 ├── .config/opencode/                 # GENERATED — do not edit
 │   ├── agents/
 │   └── skills/
-├── sync-local-agents.sh              # Deploys generated output to local tool dirs (unchanged)
+├── src/sync.ts                       # TypeScript sync script (replaces sync-local-agents.sh)
 ├── CLAUDE.md
 ├── AGENTS.md
 ├── GEMINI.md
@@ -181,7 +181,7 @@ ai-agents/
 - **Dev dependencies:** `typescript`, `@types/node`
 - **Scripts:**
   - `pnpm build` — runs `tsx src/build.ts` (generates all platform dirs)
-  - `pnpm sync` — runs `./sync-local-agents.sh` (deploys to local tool dirs)
+  - `pnpm sync` — runs `tsx src/sync.ts` (deploys to local tool dirs)
 - **tsconfig.json:** `target: ES2022`, `module: NodeNext`, `moduleResolution: NodeNext`, `outDir: dist`
 
 ## Build Script Behavior (`src/build.ts`)
@@ -228,7 +228,7 @@ src/agents/*.md  +  agents.config.json  →  pnpm build (tsx src/build.ts)
                                             ↓
                               .claude/  .codex/  .config/opencode/
                                             ↓
-                              pnpm sync (sync-local-agents.sh)
+                              pnpm sync (tsx src/sync.ts)
 ```
 
 ## What Changes
@@ -240,7 +240,7 @@ src/agents/*.md  +  agents.config.json  →  pnpm build (tsx src/build.ts)
 | Metadata | Embedded in each file's frontmatter | Centralized in `agents.config.json` |
 | Adding a new agent | Create 3 files with different frontmatter | Create 1 file + 1 config entry |
 | Adding a new platform | Copy all agents, change all frontmatter | Add 1 platform entry in config |
-| `sync-local-agents.sh` | Unchanged | Unchanged |
+| Sync to local | `sync-local-agents.sh` (bash) | `pnpm sync` (TypeScript, `src/sync.ts`) |
 | `.gitignore` | No changes needed — generated dirs stay tracked for tool compatibility |
 
 ## Edge Cases
