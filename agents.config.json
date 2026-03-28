@@ -27,7 +27,9 @@
     "backend-architect": {
       "description": "Use this agent when you need expert guidance on backend architecture decisions, domain modeling, microservices design, event-driven system architecture, or when refactoring complex business logic in Node.js/TypeScript applications. Examples include designing bounded contexts for a new feature, evaluating event sourcing strategies, reviewing aggregate design, planning service decomposition, or architecting inter-service communication patterns.",
       "color": "blue",
-      "overrides": {}
+      "overrides": {
+        "claude": { "model": "opus" }
+      }
     },
     "backend-engineer": {
       "description": "Use this agent to implement backend services, API endpoints, domain models, and tests following DDD, EDA, and microservices patterns. Handles code implementation, refactoring, test writing, and architectural reviews for distributed backend systems.",
@@ -56,7 +58,9 @@
     "frontend-architect": {
       "description": "Expert in modern web architecture, performance, and component design. You are the technical lead. You decide \"how\" the system is built and how data flows through it.",
       "color": "orange",
-      "overrides": {}
+      "overrides": {
+        "claude": { "model": "opus" }
+      }
     },
     "frontend-engineer": {
       "description": "Use this agent when the user needs to define high-level technical strategies, project structures, or complex data flow patterns. This includes choosing the technology stack, setting up state management architecture, implementing API integration layers, and establishing coding standards for TypeScript environments. This agent handles the structural integrity and scalability of the application rather than granular UI implementation.",
@@ -75,24 +79,31 @@
     "principal-engineer": {
       "description": "Use this agent when you need expert guidance on technical leadership at the principal level, including comprehensive code reviews, technical strategy, architecture decisions, mentoring, and organizational technical influence. This agent combines deep technical expertise with leadership responsibilities across multiple technology stacks.",
       "color": "red",
-      "overrides": {}
+      "overrides": {
+        "claude": { "model": "opus" }
+      }
     },
     "secops-auditor": {
       "description": "Use this agent when you need expert security operations guidance, security architecture review, or threat analysis for microservices-based systems. Invoke this agent if user is developing a new API gateway for a microservices architecture and needs security validation.",
       "color": "yellow",
-      "overrides": {}
+      "overrides": {
+        "claude": { "model": "opus" }
+      }
     },
     "seo-inspector": {
       "description": "Use this agent to audit, design, and improve SEO for modern websites and web applications. It covers technical SEO, content architecture, Core Web Vitals, structured data, internationalization, AI search readiness, and future-facing discoverability patterns for both classic search engines and answer engines.",
       "color": "yellow",
       "overrides": {
+        "claude": { "model": "opus" },
         "opencode": { "model": "openai/gpt-5.4" }
       }
     },
     "staff-engineer": {
       "description": "Use this agent when you need guidance on technical leadership, cross-team technical coordination, system architecture decisions, technical mentoring, or strategic technical planning. Examples include defining technical standards, solving complex technical problems, coordinating large technical initiatives, or providing technical direction across teams.",
       "color": "purple",
-      "overrides": {}
+      "overrides": {
+        "claude": { "model": "opus" }
+      }
     },
     "team-manager": {
       "description": "Use this agent when you need guidance on people management, team leadership, project delivery, performance management, or organizational challenges. Examples include team planning, handling conflicts, performance reviews, stakeholder communication, resource allocation, or career development strategies.",
@@ -103,6 +114,7 @@
       "description": "Use this agent if there are considering any frontend application, any changes to components. Everything that could have an impact for UX and UI in any application.",
       "color": "cyan",
       "overrides": {
+        "claude": { "model": "opus" },
         "opencode": { "model": "openai/gpt-5.4", "temperature": 0.7 }
       }
     }

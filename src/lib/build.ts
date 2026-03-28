@@ -60,10 +60,11 @@ export function buildAgents(config: Config, sourceDir: string): void {
         .trimEnd();
 
       const output = [
-        `<!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/${agentName}.md -->`,
         "---",
         yamlStr,
         "---",
+        "",
+        `<!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/${agentName}.md -->`,
         "",
         body,
       ].join("\n");
