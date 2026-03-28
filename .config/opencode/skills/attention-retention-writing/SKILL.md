@@ -8,6 +8,7 @@ metadata:
 ## When to use
 
 Use this skill when a draft has useful information but fails to grab or keep attention. Examples include:
+
 - Improving a weak introduction or headline
 - Making a technical article easier to keep reading
 - Increasing flow, tension, and momentum between sections

@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { readFileSync, mkdirSync, writeFileSync, rmSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { buildAgents, buildSkills, loadConfig } from "./build.ts";
+import { buildAgents, buildSkills } from "./lib/build.ts";
+import { loadConfig } from "./lib/config.ts";
 
 const FIXTURES_DIR = join(import.meta.dirname, "__fixtures__");
 const OUTPUT_DIR = join(FIXTURES_DIR, "output");

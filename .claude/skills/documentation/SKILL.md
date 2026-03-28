@@ -8,6 +8,7 @@ metadata:
 ## When to use
 
 Use this skill when you need to create, review, or improve technical documentation following the Diátaxis framework. Examples include:
+
 - Creating user guides
 - API documentation
 - Tutorial content

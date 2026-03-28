@@ -8,6 +8,7 @@ metadata:
 ## When to use
 
 Use this skill when you need to write, review, or improve technical blog content. Examples include:
+
 - Drafting a developer-focused article from scratch
 - Turning product knowledge into educational content
 - Rewriting a dry technical draft to make it clearer and more engaging

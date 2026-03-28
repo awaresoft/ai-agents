@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mkdirSync, writeFileSync, rmSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { syncPlatform } from "./sync.ts";
+import { syncPlatform } from "./lib/sync.ts";
 
 const FIXTURES_DIR = join(import.meta.dirname, "__fixtures_sync__");
 const SOURCE_DIR = join(FIXTURES_DIR, "source");

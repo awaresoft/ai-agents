@@ -1,12 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, readdirSync } from "node:fs";
-import { join, basename, resolve } from "node:path";
+import { join, basename } from "node:path";
 import yaml from "js-yaml";
-import type { Config, AgentConfig, PlatformConfig } from "./types.ts";
-
-export function loadConfig(configPath: string): Config {
-  const raw = readFileSync(configPath, "utf-8");
-  return JSON.parse(raw) as Config;
-}
+import type { Config, AgentConfig, PlatformConfig } from "../types.ts";
 
 function buildFrontmatter(
   agentName: string,
@@ -84,38 +79,4 @@ export function buildSkills(config: Config, sourceDir: string): void {
     rmSync(outputSkillsDir, { recursive: true, force: true });
     cpSync(sourceDir, outputSkillsDir, { recursive: true });
   }
-}
-
-function main(): void {
-  const rootDir = resolve(import.meta.dirname, "..");
-  const configPath = join(rootDir, "agents.config.json");
-  const agentsSourceDir = join(rootDir, "src", "agents");
-  const skillsSourceDir = join(rootDir, "src", "skills");
-
-  console.log("Loading config...");
-  const config = loadConfig(configPath);
-
-  // Resolve outputDir paths relative to rootDir
-  for (const platform of Object.values(config.platforms)) {
-    platform.outputDir = join(rootDir, platform.outputDir);
-  }
-
-  const platformNames = Object.keys(config.platforms);
-  const agentNames = Object.keys(config.agents);
-  console.log(`Platforms: ${platformNames.join(", ")}`);
-  console.log(`Agents: ${agentNames.length}`);
-
-  console.log("Building agents...");
-  buildAgents(config, agentsSourceDir);
-
-  console.log("Building skills...");
-  buildSkills(config, skillsSourceDir);
-
-  console.log("Done.");
-}
-
-// Run main when executed directly
-const isDirectRun = process.argv[1] && resolve(process.argv[1]) === resolve(import.meta.filename);
-if (isDirectRun) {
-  main();
 }
