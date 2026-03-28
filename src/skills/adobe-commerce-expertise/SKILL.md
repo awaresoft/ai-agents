@@ -1,3 +1,8 @@
+---
+name: adobe-commerce-expertise
+description: Agent Skill: Adobe Commerce App Builder & API Mesh
+---
+
 # Agent Skill: Adobe Commerce App Builder & API Mesh
 
 ## Overview

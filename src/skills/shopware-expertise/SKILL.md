@@ -1,3 +1,8 @@
+---
+name: shopware-expertise
+description: Agent Skill: Shopware 6 API-First Development
+---
+
 # Agent Skill: Shopware 6 API-First Development
 
 ## Overview

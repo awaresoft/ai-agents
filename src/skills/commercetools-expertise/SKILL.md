@@ -1,3 +1,8 @@
+---
+name: commercetools-expertise
+description: Agent Skill: commercetools Cloud-Native Expertise
+---
+
 # Agent Skill: commercetools Cloud-Native Expertise
 
 ## Overview

@@ -1,3 +1,8 @@
+---
+name: shopify-hydrogen-expertise
+description: Agent Skill: Shopify Headless & Hydrogen Expertise
+---
+
 # Agent Skill: Shopify Headless & Hydrogen Expertise
 
 ## Overview

@@ -1,3 +1,8 @@
+---
+name: medusa-expertise
+description: Agent Skill: Medusa.js V2 Modular Commerce
+---
+
 # Agent Skill: Medusa.js V2 Modular Commerce
 
 ## Overview

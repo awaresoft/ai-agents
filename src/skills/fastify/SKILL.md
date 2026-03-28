@@ -1,5 +1,5 @@
 ---
-name: fastify-best-practices
+name: fastify
 description: Comprehensive best practices for Fastify development
 metadata:
   tags: fastify, nodejs, typescript, backend, api, server, http
