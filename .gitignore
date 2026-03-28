@@ -1,3 +1,9 @@
 .idea
 node_modules/
 dist/
+
+# Generated platform output (run `pnpm build` to regenerate)
+.claude/agents/
+.claude/skills/
+.codex/
+.config/opencode/
