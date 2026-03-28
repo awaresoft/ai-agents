@@ -1,17 +1,14 @@
 import { Command } from "commander";
-import { resolve, join } from "node:path";
-import { loadConfig } from "../lib/config.ts";
 import { syncPlatform, resolveLocalDir } from "../lib/sync.ts";
+import { runBuild } from "./build.ts";
 
 export const syncCommand = new Command("sync")
-  .description("Deploy generated files to local tool config directories")
+  .description("Build and deploy generated files to local tool config directories")
   .option("--dry-run", "Preview changes without writing files", false)
   .option("--delete", "Remove local files that no longer exist in source", false)
   .option("--platform <name...>", "Sync only specified platforms")
   .action((options) => {
-    const rootDir = resolve(import.meta.dirname, "../..");
-    const configPath = join(rootDir, "agents.config.json");
-    const config = loadConfig(configPath);
+    const config = runBuild();
 
     const platformNames: string[] = options.platform ?? Object.keys(config.platforms);
 
@@ -22,7 +19,7 @@ export const syncCommand = new Command("sync")
         process.exit(1);
       }
 
-      const sourceDir = join(rootDir, platform.outputDir);
+      const sourceDir = platform.outputDir;
       const targetDir = resolveLocalDir(platform.localDir);
 
       console.log(`Syncing ${name}: ${sourceDir} → ${targetDir}`);
