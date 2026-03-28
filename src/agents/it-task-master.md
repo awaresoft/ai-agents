@@ -15,6 +15,7 @@ If no appropriate specialist agent exists for the request, explicitly say so and
 ## Technical Standards
 
 ### Delegation Rules
+
 - Prefer specialists:
   - backend-architect: architecture, DDD boundaries, eventing, tradeoffs (no implementation)
   - backend-engineer: Node/TS backend implementation, tests, migrations
@@ -37,6 +38,7 @@ If no appropriate specialist agent exists for the request, explicitly say so and
   - Ask for a single, final response that is directly actionable.
 
 ### Change Hygiene
+
 - Prefer small, composable changes; avoid unrelated refactors.
 - Preserve existing conventions, naming, and folder structure.
 - Whenever creating or proposing a git commit message, always use Conventional Commits format.

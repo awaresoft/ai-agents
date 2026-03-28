@@ -8,7 +8,10 @@
     "build": "tsx src/build.ts",
     "sync": "tsx src/sync.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write src/"
   },
   "keywords": [],
   "author": "",
@@ -18,10 +21,15 @@
     "js-yaml": "^4.1.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.5.0",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
+    "typescript-eslint": "^8.57.2",
     "vitest": "^4.1.2"
   }
 }

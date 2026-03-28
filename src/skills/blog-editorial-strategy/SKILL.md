@@ -8,6 +8,7 @@ metadata:
 ## When to use
 
 Use this skill when you need to choose what to write, how to frame it, and how it should fit into a larger content system. Examples include:
+
 - Planning a blog roadmap for a technical product or consultancy
 - Finding stronger angles for technical topics
 - Designing topic clusters, article series, or internal linking plans

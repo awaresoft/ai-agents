@@ -12,7 +12,7 @@ function buildFrontmatter(
   agentName: string,
   agent: AgentConfig,
   platform: PlatformConfig,
-  platformName: string
+  platformName: string,
 ): Record<string, string | number> {
   const merged: Record<string, string | number> = {};
 
@@ -56,11 +56,13 @@ export function buildAgents(config: Config, sourceDir: string): void {
       const body = readFileSync(join(sourceDir, file), "utf-8");
       const frontmatter = buildFrontmatter(agentName, agentConfig, platform, platformName);
 
-      const yamlStr = yaml.dump(frontmatter, {
-        lineWidth: -1,
-        quotingType: '"',
-        forceQuotes: false,
-      }).trimEnd();
+      const yamlStr = yaml
+        .dump(frontmatter, {
+          lineWidth: -1,
+          quotingType: '"',
+          forceQuotes: false,
+        })
+        .trimEnd();
 
       const output = [
         `<!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/${agentName}.md -->`,

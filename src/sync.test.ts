@@ -14,12 +14,9 @@ function setupFixtures() {
 
   writeFileSync(
     join(SOURCE_DIR, "agents", "test-agent.md"),
-    "---\nname: test-agent\n---\nAgent content\n"
+    "---\nname: test-agent\n---\nAgent content\n",
   );
-  writeFileSync(
-    join(SOURCE_DIR, "skills", "test-skill", "SKILL.md"),
-    "Skill content\n"
-  );
+  writeFileSync(join(SOURCE_DIR, "skills", "test-skill", "SKILL.md"), "Skill content\n");
 }
 
 function cleanupFixtures() {
@@ -35,15 +32,12 @@ describe("syncPlatform", () => {
   it("copies agents and skills from source to target", () => {
     syncPlatform(SOURCE_DIR, TARGET_DIR, { dryRun: false, delete: false });
 
-    const agentContent = readFileSync(
-      join(TARGET_DIR, "agents", "test-agent.md"),
-      "utf-8"
-    );
+    const agentContent = readFileSync(join(TARGET_DIR, "agents", "test-agent.md"), "utf-8");
     expect(agentContent).toContain("Agent content");
 
     const skillContent = readFileSync(
       join(TARGET_DIR, "skills", "test-skill", "SKILL.md"),
-      "utf-8"
+      "utf-8",
     );
     expect(skillContent).toContain("Skill content");
   });

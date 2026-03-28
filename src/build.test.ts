@@ -13,12 +13,12 @@ function setupFixtures() {
 
   writeFileSync(
     join(FIXTURES_DIR, "agents", "test-agent.md"),
-    "You are a test agent.\n\n## Responsibilities\n\n- Test things\n"
+    "You are a test agent.\n\n## Responsibilities\n\n- Test things\n",
   );
 
   writeFileSync(
     join(FIXTURES_DIR, "skills", "test-skill", "SKILL.md"),
-    "---\nname: test-skill\n---\nSkill content here.\n"
+    "---\nname: test-skill\n---\nSkill content here.\n",
   );
 }
 
@@ -71,7 +71,7 @@ describe("buildAgents", () => {
 
     const claudeFile = readFileSync(
       join(OUTPUT_DIR, ".claude", "agents", "test-agent.md"),
-      "utf-8"
+      "utf-8",
     );
     expect(claudeFile).toContain("<!-- GENERATED FILE");
     expect(claudeFile).toContain("---");
@@ -81,10 +81,7 @@ describe("buildAgents", () => {
     expect(claudeFile).toContain("You are a test agent.");
     expect(claudeFile).not.toContain("temperature");
 
-    const codexFile = readFileSync(
-      join(OUTPUT_DIR, ".codex", "agents", "test-agent.md"),
-      "utf-8"
-    );
+    const codexFile = readFileSync(join(OUTPUT_DIR, ".codex", "agents", "test-agent.md"), "utf-8");
     expect(codexFile).toContain("model: openai/gpt-5.4");
     expect(codexFile).toContain("temperature: 0.3");
     expect(codexFile).toContain("You are a test agent.");
@@ -95,7 +92,7 @@ describe("buildAgents", () => {
 
     const claudeFile = readFileSync(
       join(OUTPUT_DIR, ".claude", "agents", "test-agent.md"),
-      "utf-8"
+      "utf-8",
     );
     expect(claudeFile).not.toContain("temperature");
   });
@@ -105,7 +102,7 @@ describe("buildAgents", () => {
 
     const claudeFile = readFileSync(
       join(OUTPUT_DIR, ".claude", "agents", "test-agent.md"),
-      "utf-8"
+      "utf-8",
     );
     expect(claudeFile.startsWith("<!-- GENERATED FILE")).toBe(true);
   });
@@ -120,13 +117,13 @@ describe("buildSkills", () => {
 
     const claudeSkill = readFileSync(
       join(OUTPUT_DIR, ".claude", "skills", "test-skill", "SKILL.md"),
-      "utf-8"
+      "utf-8",
     );
     expect(claudeSkill).toContain("Skill content here.");
 
     const codexSkill = readFileSync(
       join(OUTPUT_DIR, ".codex", "skills", "test-skill", "SKILL.md"),
-      "utf-8"
+      "utf-8",
     );
     expect(codexSkill).toContain("Skill content here.");
   });

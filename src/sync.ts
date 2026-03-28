@@ -1,7 +1,7 @@
 import { cpSync, rmSync, mkdirSync, readdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { homedir } from "node:os";
-import type { Config, SyncOptions } from "./types.ts";
+import type { SyncOptions } from "./types.ts";
 import { loadConfig } from "./build.ts";
 
 interface SyncPlatformOptions {
@@ -12,7 +12,7 @@ interface SyncPlatformOptions {
 export function syncPlatform(
   sourceDir: string,
   targetDir: string,
-  options: SyncPlatformOptions
+  options: SyncPlatformOptions,
 ): void {
   const subdirs = ["agents", "skills"];
 
@@ -91,10 +91,7 @@ function main(): void {
   const config = loadConfig(configPath);
   const args = parseArgs(process.argv.slice(2));
 
-  const platformNames =
-    args.platforms.length > 0
-      ? args.platforms
-      : Object.keys(config.platforms);
+  const platformNames = args.platforms.length > 0 ? args.platforms : Object.keys(config.platforms);
 
   for (const name of platformNames) {
     const platform = config.platforms[name];
