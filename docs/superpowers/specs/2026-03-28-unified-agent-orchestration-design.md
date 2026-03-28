@@ -9,7 +9,7 @@ Agents and skills are duplicated across 3 platform directories (`.claude/`, `.co
 
 ## Decision
 
-Introduce a single source of truth under `src/agents/` and `src/skills/` with no frontmatter. An `agents.config.json` file defines all metadata and platform-specific overrides. A Node.js build script (`build.js`) generates the platform-specific output directories.
+Introduce a single source of truth under `src/agents/` and `src/skills/` with no frontmatter. An `agents.config.json` file defines all metadata and platform-specific overrides. A TypeScript build script (`src/build.ts`) generates the platform-specific output directories. The project uses **pnpm** as the package manager and targets **ES2022**.
 
 ## Directory Structure
 
@@ -37,7 +37,10 @@ ai-agents/
 │       ├── ... (22 skill directories total)
 │       └── tech-arch-research/
 ├── agents.config.json                # All metadata + per-platform overrides
-├── build.js                          # Node.js build script
+├── src/build.ts                      # TypeScript build script
+├── package.json                      # pnpm project config
+├── pnpm-lock.yaml
+├── tsconfig.json                     # ES2022, NodeNext
 ├── .claude/                          # GENERATED — do not edit
 │   ├── agents/
 │   └── skills/
@@ -170,7 +173,18 @@ ai-agents/
 }
 ```
 
-## Build Script Behavior (`build.js`)
+## Toolchain
+
+- **Package manager:** pnpm
+- **Language:** TypeScript (ES2022, NodeNext module resolution)
+- **Dependencies:** `js-yaml` for YAML serialization (frontmatter generation)
+- **Dev dependencies:** `typescript`, `@types/node`
+- **Scripts:**
+  - `pnpm build` — runs `tsx src/build.ts` (generates all platform dirs)
+  - `pnpm sync` — runs `./sync-local-agents.sh` (deploys to local tool dirs)
+- **tsconfig.json:** `target: ES2022`, `module: NodeNext`, `moduleResolution: NodeNext`, `outDir: dist`
+
+## Build Script Behavior (`src/build.ts`)
 
 ### Agent Build
 
@@ -210,11 +224,11 @@ Null/undefined values are omitted from the output frontmatter (e.g., if temperat
 
 ```
 Edit source          Edit config           Run build
-src/agents/*.md  +  agents.config.json  →  node build.js
+src/agents/*.md  +  agents.config.json  →  pnpm build (tsx src/build.ts)
                                             ↓
                               .claude/  .codex/  .config/opencode/
                                             ↓
-                              sync-local-agents.sh (deploy locally)
+                              pnpm sync (sync-local-agents.sh)
 ```
 
 ## What Changes
