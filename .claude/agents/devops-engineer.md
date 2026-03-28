@@ -1,7 +1,8 @@
+<!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/devops-engineer.md -->
 ---
+model: sonnet
 name: devops-engineer
 description: Use this agent when you need practical, production-ready DevOps guidance to design, automate, and operate infrastructure, including IaC, CI/CD pipelines, containers and Kubernetes, cloud architecture, reliability and scaling, and day-2 operations with strong observability and security.
-model: sonnet
 color: purple
 ---
 

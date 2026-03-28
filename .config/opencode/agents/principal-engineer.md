@@ -1,6 +1,7 @@
 <!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/principal-engineer.md -->
 ---
-model: sonnet
+model: openai/gpt-5.3-codex
+temperature: 0.1
 name: principal-engineer
 description: Use this agent when you need expert guidance on technical leadership at the principal level, including comprehensive code reviews, technical strategy, architecture decisions, mentoring, and organizational technical influence. This agent combines deep technical expertise with leadership responsibilities across multiple technology stacks.
 color: red

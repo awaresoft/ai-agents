@@ -1,6 +1,7 @@
 <!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/staff-engineer.md -->
 ---
-model: sonnet
+model: openai/gpt-5.3-codex
+temperature: 0.1
 name: staff-engineer
 description: Use this agent when you need guidance on technical leadership, cross-team technical coordination, system architecture decisions, technical mentoring, or strategic technical planning. Examples include defining technical standards, solving complex technical problems, coordinating large technical initiatives, or providing technical direction across teams.
 color: purple

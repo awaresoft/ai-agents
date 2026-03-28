@@ -1,7 +1,8 @@
+<!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/backend-engineer.md -->
 ---
+model: sonnet
 name: backend-engineer
 description: Use this agent to implement backend services, API endpoints, domain models, and tests following DDD, EDA, and microservices patterns. Handles code implementation, refactoring, test writing, and architectural reviews for distributed backend systems.
-model: sonnet
 color: green
 ---
 

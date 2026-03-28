@@ -1,7 +1,8 @@
+<!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/seo-inspector.md -->
 ---
+model: openai/gpt-5.4
 name: seo-inspector
 description: Use this agent to audit, design, and improve SEO for modern websites and web applications. It covers technical SEO, content architecture, Core Web Vitals, structured data, internationalization, AI search readiness, and future-facing discoverability patterns for both classic search engines and answer engines.
-model: openai/gpt-5.4
 color: yellow
 ---
 

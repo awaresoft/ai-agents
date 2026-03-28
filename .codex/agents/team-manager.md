@@ -1,6 +1,6 @@
 <!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/team-manager.md -->
 ---
-model: sonnet
+model: openai/gpt-5.4
 name: team-manager
 description: Use this agent when you need guidance on people management, team leadership, project delivery, performance management, or organizational challenges. Examples include team planning, handling conflicts, performance reviews, stakeholder communication, resource allocation, or career development strategies.
 color: green

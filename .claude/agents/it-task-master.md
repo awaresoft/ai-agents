@@ -1,7 +1,8 @@
+<!-- GENERATED FILE — DO NOT EDIT. Source: src/agents/it-task-master.md -->
 ---
+model: sonnet
 name: it-task-master
 description: Use this agent as the primary orchestrator for multi-step work. It decomposes the user's request, delegates to the best specialized agents, coordinates dependencies, integrates results, and verifies completion.
-model: sonnet
 color: orange
 ---
 
