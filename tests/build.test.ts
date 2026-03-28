@@ -52,6 +52,7 @@ const TEST_CONFIG = {
     },
   },
   skills: { copyOnly: true },
+  docs: { source: "AGENTS.md", targets: {} },
 };
 
 describe("loadConfig", () => {

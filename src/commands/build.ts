@@ -2,6 +2,7 @@ import { Command } from "commander";
 import { resolve, join } from "node:path";
 import { loadConfig } from "../lib/config.ts";
 import { buildAgents, buildSkills } from "../lib/build.ts";
+import { buildDocs } from "../lib/docs.ts";
 import type { Config } from "../types.ts";
 
 export function runBuild(): Config {
@@ -27,6 +28,9 @@ export function runBuild(): Config {
 
   console.log("Building skills...");
   buildSkills(config, skillsSourceDir);
+
+  console.log("Building docs...");
+  buildDocs(config.docs, rootDir);
 
   console.log("Build complete.");
   return config;
