@@ -1,0 +1,113 @@
+{
+  "platforms": {
+    "claude": {
+      "outputDir": ".claude",
+      "localDir": "~/.claude",
+      "defaults": {
+        "model": "sonnet"
+      }
+    },
+    "codex": {
+      "outputDir": ".codex",
+      "localDir": "~/.codex",
+      "defaults": {
+        "model": "openai/gpt-5.4"
+      }
+    },
+    "opencode": {
+      "outputDir": ".config/opencode",
+      "localDir": "~/.config/opencode",
+      "defaults": {
+        "model": "openai/gpt-5.3-codex",
+        "temperature": 0.1
+      }
+    }
+  },
+  "agents": {
+    "backend-architect": {
+      "description": "Use this agent when you need expert guidance on backend architecture decisions, domain modeling, microservices design, event-driven system architecture, or when refactoring complex business logic in Node.js/TypeScript applications. Examples include designing bounded contexts for a new feature, evaluating event sourcing strategies, reviewing aggregate design, planning service decomposition, or architecting inter-service communication patterns.",
+      "color": "blue",
+      "overrides": {}
+    },
+    "backend-engineer": {
+      "description": "Use this agent to implement backend services, API endpoints, domain models, and tests following DDD, EDA, and microservices patterns. Handles code implementation, refactoring, test writing, and architectural reviews for distributed backend systems.",
+      "color": "green",
+      "overrides": {
+        "opencode": { "temperature": 0.4 }
+      }
+    },
+    "content-writer": {
+      "description": "Use this agent to plan, write, and refine technical blog content that earns attention, builds trust, and drives action. It specializes in developer-facing articles, thought leadership, tutorials, comparison pieces, and product-adjacent educational content with strong hooks, clear structure, and search-aware execution.",
+      "color": "orange",
+      "overrides": {
+        "opencode": { "model": "openai/gpt-5.4", "temperature": 0.3 }
+      }
+    },
+    "devops-engineer": {
+      "description": "Use this agent when you need practical, production-ready DevOps guidance to design, automate, and operate infrastructure, including IaC, CI/CD pipelines, containers and Kubernetes, cloud architecture, reliability and scaling, and day-2 operations with strong observability and security.",
+      "color": "purple",
+      "overrides": {}
+    },
+    "e2e-test-engineer": {
+      "description": "Use this agent when you need to create, review, or optimize end-to-end tests using Playwright. This includes writing new E2E test suites for features or user workflows, reviewing existing E2E test code for best practices and maintainability, debugging flaky or failing E2E tests, setting up or maintaining CI/CD pipeline configurations for E2E testing, optimizing test performance and execution strategies, providing guidance on test architecture, page object models, and test organization, refactoring legacy E2E tests for better reliability.",
+      "color": "cyan",
+      "overrides": {}
+    },
+    "frontend-architect": {
+      "description": "Expert in modern web architecture, performance, and component design. You are the technical lead. You decide \"how\" the system is built and how data flows through it.",
+      "color": "orange",
+      "overrides": {}
+    },
+    "frontend-engineer": {
+      "description": "Use this agent when the user needs to define high-level technical strategies, project structures, or complex data flow patterns. This includes choosing the technology stack, setting up state management architecture, implementing API integration layers, and establishing coding standards for TypeScript environments. This agent handles the structural integrity and scalability of the application rather than granular UI implementation.",
+      "color": "yellow",
+      "overrides": {
+        "opencode": { "temperature": 0.4 }
+      }
+    },
+    "it-task-master": {
+      "description": "Use this agent as the primary orchestrator for multi-step work. It decomposes the user's request, delegates to the best specialized agents, coordinates dependencies, integrates results, and verifies completion.",
+      "color": "orange",
+      "overrides": {
+        "opencode": { "model": "openai/gpt-5.4" }
+      }
+    },
+    "principal-engineer": {
+      "description": "Use this agent when you need expert guidance on technical leadership at the principal level, including comprehensive code reviews, technical strategy, architecture decisions, mentoring, and organizational technical influence. This agent combines deep technical expertise with leadership responsibilities across multiple technology stacks.",
+      "color": "red",
+      "overrides": {}
+    },
+    "secops-auditor": {
+      "description": "Use this agent when you need expert security operations guidance, security architecture review, or threat analysis for microservices-based systems. Invoke this agent if user is developing a new API gateway for a microservices architecture and needs security validation.",
+      "color": "yellow",
+      "overrides": {}
+    },
+    "seo-inspector": {
+      "description": "Use this agent to audit, design, and improve SEO for modern websites and web applications. It covers technical SEO, content architecture, Core Web Vitals, structured data, internationalization, AI search readiness, and future-facing discoverability patterns for both classic search engines and answer engines.",
+      "color": "yellow",
+      "overrides": {
+        "opencode": { "model": "openai/gpt-5.4" }
+      }
+    },
+    "staff-engineer": {
+      "description": "Use this agent when you need guidance on technical leadership, cross-team technical coordination, system architecture decisions, technical mentoring, or strategic technical planning. Examples include defining technical standards, solving complex technical problems, coordinating large technical initiatives, or providing technical direction across teams.",
+      "color": "purple",
+      "overrides": {}
+    },
+    "team-manager": {
+      "description": "Use this agent when you need guidance on people management, team leadership, project delivery, performance management, or organizational challenges. Examples include team planning, handling conflicts, performance reviews, stakeholder communication, resource allocation, or career development strategies.",
+      "color": "green",
+      "overrides": {}
+    },
+    "ux-ui-architect": {
+      "description": "Use this agent if there are considering any frontend application, any changes to components. Everything that could have an impact for UX and UI in any application.",
+      "color": "cyan",
+      "overrides": {
+        "opencode": { "model": "openai/gpt-5.4", "temperature": 0.7 }
+      }
+    }
+  },
+  "skills": {
+    "copyOnly": true
+  }
+}
