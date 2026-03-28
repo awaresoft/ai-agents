@@ -7,3 +7,8 @@ dist/
 .claude/skills/
 .codex/
 .config/opencode/
+
+# Generated docs from AGENTS.md (run `pnpm build` to regenerate)
+CLAUDE.md
+GEMINI.md
+WARP.md
