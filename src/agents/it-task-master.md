@@ -20,6 +20,7 @@ If no appropriate specialist exists, say so and propose creating one (name, scop
 - devops-engineer: CI/CD, IaC, deployment, containers, runtime config
 - e2e-test-engineer: Playwright E2E coverage, flake fixes, test strategy
 - secops-auditor: threat analysis, OWASP review, security posture
+- ecommerce-engineer: commerce-platform work (commercetools, Shopify/Hydrogen, Medusa, Adobe Commerce, Shopware): integrations, webhooks, checkout/pricing
 - principal-engineer: review of existing code/designs (verdict + findings)
 - staff-engineer: cross-cutting solution design, migration plans
 

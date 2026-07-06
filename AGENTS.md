@@ -13,7 +13,7 @@ pnpm lint           # Run ESLint
 
 ## Available Agents
 
-All 14 agents are available on all platforms (Claude, Codex, OpenCode).
+All 15 agents are available on all platforms (Claude, Codex, OpenCode).
 
 | Agent | Primary Purpose |
 |-------|-----------------|
@@ -23,6 +23,7 @@ All 14 agents are available on all platforms (Claude, Codex, OpenCode).
 | **frontend-architect** | Web architecture, data flow, and frontend project structure. |
 | **frontend-engineer** | UI implementation, component development, and frontend testing. |
 | **ux-ui-architect** | Design systems, accessibility, and high-performance mobile-first interfaces. |
+| **ecommerce-engineer** | E-commerce platform selection and integrations: commercetools, Shopify/Hydrogen, Medusa, Adobe Commerce, Shopware. |
 | **devops-engineer** | Infrastructure as Code, CI/CD, and cloud orchestration. |
 | **e2e-test-engineer** | Playwright-based end-to-end testing and quality assurance. |
 | **secops-auditor** | Security architecture, threat analysis, and OWASP compliance. |
@@ -67,7 +68,8 @@ Skills are shared across all platforms.
 
 ## Agent Development Guidelines
 
-When creating or modifying agents:
+When creating or modifying agents or skills, follow [docs/authoring-standards.md](./docs/authoring-standards.md) (body template, description rules, progressive disclosure, token budgets).
+
 - Add source content to `src/agents/{name}.md` (no frontmatter).
 - Add metadata to `agents.config.json` with `description`, `color`, and any platform `overrides`.
 - Run `pnpm build` to generate platform output.
