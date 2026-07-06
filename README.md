@@ -54,7 +54,7 @@ All 15 agents are available on all platforms (Claude, Codex, OpenCode).
 | **frontend-architect** | Web architecture, data flow, and frontend project structure. |
 | **frontend-engineer** | UI implementation, component development, and frontend testing. |
 | **ux-ui-architect** | Design systems, accessibility, and high-performance mobile-first interfaces. |
-| **ecommerce-engineer** | E-commerce platform selection and integrations: commercetools, Shopify/Hydrogen, Medusa, Adobe Commerce, Shopware. |
+| **ecommerce-architect** | E-commerce platform selection, pre-solution discovery, and platform-vs-custom boundary decisions; hands off to backend-architect. |
 | **devops-engineer** | Infrastructure as Code, CI/CD, and cloud orchestration. |
 | **e2e-test-engineer** | Playwright-based end-to-end testing and quality assurance. |
 | **secops-auditor** | Security architecture, threat analysis, and OWASP compliance. |

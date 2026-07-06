@@ -45,10 +45,12 @@
         "opencode": { "model": "openai/gpt-5.4", "temperature": 0.3 }
       }
     },
-    "ecommerce-engineer": {
-      "description": "Use this agent for e-commerce platform work: selecting between or building on commercetools, Shopify/Hydrogen, Medusa, Adobe Commerce, or Shopware - storefront and backoffice integrations, webhooks, catalog/order sync, checkout and pricing logic. Not for general backend or frontend work outside commerce platforms.",
+    "ecommerce-architect": {
+      "description": "Use this agent for e-commerce architecture decisions: selecting a commerce platform (commercetools, Shopify/Hydrogen, Medusa, Adobe Commerce, Shopware), running pre-solution discovery (business model, scale, catalog, pricing, markets, integrations, TCO), and fixing the platform-vs-custom boundary before backend-architect designs services. Not for implementation.",
       "color": "magenta",
-      "overrides": {}
+      "overrides": {
+        "claude": { "model": "opus" }
+      }
     },
     "devops-engineer": {
       "description": "Use this agent when you need practical, production-ready DevOps guidance to design, automate, and operate infrastructure, including IaC, CI/CD pipelines, containers and Kubernetes, cloud architecture, reliability and scaling, and day-2 operations with strong observability and security.",
