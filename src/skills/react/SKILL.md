@@ -1,42 +1,19 @@
 ---
 name: react
-description: Reusable React engineering guidance covering component patterns, rendering behavior, state boundaries, testing, accessibility, and performance in React 18+ applications.
-metadata:
-  short-description: React 18+ implementation standards
+description: "Use when writing or reviewing React components or hooks - re-render and memoization questions, state placement, Suspense and error boundaries, forms, or React Testing Library tests. For Next.js routing/caching use next-js; for mobile use react-native."
 ---
 
 # React
 
-Use this skill when implementing or reviewing React web applications.
+Base skill for the React family. The `next-js` and `react-native` skills assume everything here and add only platform deltas.
 
-## React 18 Baseline
+## House Rules
 
-- Prefer function components and hooks-based composition.
-- Understand rendering behavior under concurrent features and avoid side effects during render.
-- Model component state transitions explicitly for loading, success, and error paths.
-
-## Component and State Patterns
-
-- Keep components focused and extract reusable logic into custom hooks.
-- Place state near usage and promote shared state only when multiple branches require it.
-- Use context deliberately for cross-cutting concerns, not as a default global state tool.
-- Define clear boundaries between presentational components and data-orchestration components.
-
-## Rendering and Performance
-
-- Profile before optimization, then apply memoization (`useMemo`, `useCallback`, `React.memo`) where it materially reduces work.
-- Use list virtualization for large datasets and stabilize keys for dynamic collections.
-- Apply code splitting and lazy loading for non-critical routes and heavy components.
-- Manage Suspense and fallback UX intentionally to avoid layout instability.
-
-## Error Handling and UX Resilience
-
-- Use error boundaries around unstable or high-risk subtrees.
-- Keep asynchronous effects cancellable where possible and prevent stale updates on unmounted components.
-- Provide explicit empty, loading, partial-data, and error states for user-facing flows.
-
-## Testing and Accessibility
-
-- Favor behavior-driven tests with React Testing Library over implementation-detail assertions.
-- Validate keyboard navigation, semantic structure, and accessible names for interactive controls.
-- Include integration tests for form workflows, async state transitions, and edge cases.
+- **Server state goes through TanStack Query.** Never `useEffect` + `fetch` + `setState` — that pattern re-invents caching, races, and retries badly. Query keys mirror the API resource; mutations invalidate them.
+- **Forms are react-hook-form + `zodResolver`.** One module-level Zod schema per form. No per-field `useState` validation, no HTML5 validation attributes.
+- **Derived state is computed during render.** If a value can be calculated from props/state, calculate it inline (or in `useMemo` when provably hot). Mirroring it via `useEffect` + `setState` causes double renders and stale frames.
+- **Memoization:** if the React Compiler is enabled, write plain code — no manual `useMemo`/`useCallback`/`React.memo`. Without the compiler, memoize only after the Profiler shows a real cost. Speculative memoization is noise.
+- **State placement ladder:** local → lifted to nearest common parent → URL (filters, tabs, pagination) → global store. Reach for a global store last; most "global" state is actually server state (see rule 1) or URL state.
+- **Error and Suspense boundaries per route/feature**, not one app-wide catch-all. A failed widget should not blank the page.
+- **RTL tests query by role/label** (`getByRole`, `getByLabelText`) and assert user-visible behavior — never class names, state internals, or `data-testid` as first resort.
+- **Keys derive from data identity** (id, slug). Never array index for lists that reorder, filter, or insert.

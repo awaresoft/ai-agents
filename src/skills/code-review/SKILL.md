@@ -1,13 +1,9 @@
 ---
 name: code-review
-description: Perform rigorous code reviews - identify correctness, security, reliability, and testing gaps; report findings by severity with file references and actionable fixes.
-metadata:
-  short-description: High-signal code review workflow
+description: "Use when asked to review code, a diff, a PR, or a branch, or what is wrong with a change - including pre-merge checks and post-implementation self-review."
 ---
 
 # Code Review
-
-Use this skill when the user requests a code review or review of a diff/PR.
 
 ## Workflow
 
@@ -32,16 +28,13 @@ Use this skill when the user requests a code review or review of a diff/PR.
 - Provide a brief change-summary only after findings.
 - If no findings, explicitly say so and list residual risks or testing gaps.
 
-## Review Checklist
+## Noise Policy
 
-- **Correctness**: invariants, null/undefined handling, edge cases.
-- **Security**: authn/authz, input validation, secrets and PII exposure.
-- **Reliability**: timeouts, retries, idempotency, concurrency safety.
-- **Performance**: N+1 queries, hot paths, memory and IO usage.
-- **Observability**: logs/metrics/traces for new behavior.
-- **Testing**: missing unit/integration tests for risky paths.
+Report only findings you would defend in person. Max 3 Low-severity findings; drop the rest. One Blocker buried under 20 nitpicks is a failed review.
 
 ## Microservices Checklist
+
+Apply ONLY if the diff touches service boundaries.
 
 - **Service boundaries**: no cross-domain leakage; owns its data and rules.
 - **Contracts**: API/event schemas versioned and backward compatible.
@@ -51,6 +44,8 @@ Use this skill when the user requests a code review or review of a diff/PR.
 
 ## DDD Checklist
 
+Apply ONLY if the diff touches the domain model.
+
 - **Ubiquitous language**: names match domain terms.
 - **Aggregates**: invariants enforced inside aggregate boundaries.
 - **Domain events**: emitted from domain layer, not adapters.
@@ -58,6 +53,8 @@ Use this skill when the user requests a code review or review of a diff/PR.
 - **Anti-corruption**: external models mapped, not reused directly.
 
 ## Event-Driven Checklist
+
+Apply ONLY if the diff touches message handlers.
 
 - **Idempotency**: handlers safe to retry; dedupe strategy exists.
 - **Ordering**: explicit handling for out-of-order events.

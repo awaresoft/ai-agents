@@ -1,8 +1,6 @@
 ---
 name: blog-editorial-strategy
-description: Editorial planning skill for technical blogs covering audience intent, topic angles, content series, and conversion-aware publishing strategy.
-metadata:
-  tags: content-strategy, editorial, blog, seo, positioning, demand-generation
+description: "Use when planning what to write for a technical blog - choosing topics and angles, building a content roadmap or series, topic clusters, aligning posts with conversion or authority goals."
 ---
 
 ## When to use
@@ -31,8 +29,12 @@ When planning editorial strategy, you will:
    - Look for underexplained problems, category confusion, and opinionated opportunities
    - Prioritize angles that help senior readers make better technical or commercial decisions
 
+   Weak-to-strong rewrite examples:
+   - "Introduction to Kafka" → "When Kafka is the wrong choice: three teams that should have used a queue"
+   - "Best practices for microservices" → "We merged 12 microservices back into a monolith and cut our AWS bill 40%"
+
 3. **Map content into a system**:
-   - Build pillar and supporting topics with clear internal-linking relationships
+   - For topic-cluster and internal-linking mechanics, follow the `seo-inspection` skill's content-strategy reference; this skill decides what goes in the cluster, not how it links
    - Balance evergreen content, timely commentary, product-adjacent education, and conversion assets
    - Plan refresh cadence so valuable articles do not decay
 
@@ -45,10 +47,5 @@ When planning editorial strategy, you will:
    - Choose formats and structures that can be repurposed into newsletters, social posts, threads, talks, or lead magnets
    - Recommend titles, hooks, and supporting assets that improve packaging
    - Identify where original data, examples, or visual assets would multiply performance
-
-6. **Maintain editorial quality**:
-   - Avoid topic cannibalization, vague themes, and repetitive listicle thinking
-   - Favor expertise, differentiation, and real usefulness over volume
-   - Build a portfolio of content that compounds authority over time
 
 Your output should help a team decide not only how to write a single post, but why that post deserves to exist and how it contributes to a broader content engine.

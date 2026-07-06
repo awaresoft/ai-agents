@@ -1,49 +1,20 @@
 ---
 name: seo-inspection
-description: Full-spectrum SEO audit workflow covering technical SEO, content quality, structured data, Core Web Vitals, internationalization, and future-facing AI search readiness.
+description: "Use when asked to audit, review, or improve a site's SEO - rankings dropped, pre-launch or migration SEO check, page not indexed or not ranking, Core Web Vitals, structured data, hreflang, AI/LLM search visibility, or SEO reporting setup."
 ---
 
 # SEO Inspection
 
-## Core workflow
+**Triage first:** classify the ask as technical / content / AI visibility / measurement — then read ONLY the matching reference file(s), max 2 per task. A full audit works through all four in table order.
 
-1. Define scope and goals
+| Reference | Covers |
+| --- | --- |
+| [references/technical-audit.md](references/technical-audit.md) | Crawl, indexation, rendering, canonicals, Core Web Vitals |
+| [references/content-strategy.md](references/content-strategy.md) | Search intent, topic clusters, cannibalization, E-E-A-T |
+| [references/ai-search.md](references/ai-search.md) | AI Overviews, LLM citations, GEO, llms.txt |
+| [references/measurement.md](references/measurement.md) | GSC, dashboards, alerts, SEO experiments |
 
-- Identify the site type, markets, business goals, and priority page types.
-- Confirm whether the objective is audit, recovery, migration, launch readiness, or growth planning.
+**Conventions for every task:**
 
-2. Gather evidence
-
-- Inspect templates, rendered HTML, metadata systems, sitemap and robots configuration, structured data, and internal linking.
-- Capture evidence from source files, URLs, crawl exports, performance reports, analytics, and search-console signals.
-
-3. Evaluate core SEO pillars
-
-- Verify crawlability, indexability, canonicalization, rendering, page experience, and duplicate content controls.
-- Assess on-page quality, intent match, information architecture, and entity clarity.
-
-4. Evaluate modern and future signals
-
-- Check AI Overview readiness, answer-first content patterns, citation-friendly formatting, and machine-readable semantics.
-- Review whether content is likely to be understood, quoted, and trusted by LLM-driven experiences.
-
-5. Prioritize action plan
-
-- Group findings into critical blockers, high-impact fixes, medium improvements, and strategic opportunities.
-- Recommend validation steps, ownership areas, and monitoring KPIs.
-
-## Output guidelines
-
-- Separate confirmed issues from hypotheses.
-- Reference concrete pages, templates, or file paths whenever possible.
-- Pair each finding with impact, rationale, and recommended fix.
-- End with a roadmap split into `Now`, `Next`, and `Later`.
-
-## Inspection checklist
-
-- Robots, sitemaps, canonicals, redirects, status codes, and crawl depth.
-- Rendered content, JavaScript dependencies, internal links, and mobile parity.
-- Titles, descriptions, headings, semantic HTML, media optimization, and structured data.
-- Hreflang, localization consistency, duplicate content, and faceted navigation controls.
-- E-E-A-T support, entity clarity, answer extraction quality, and citation readiness.
-- Measurement coverage for rankings, clicks, impressions, crawl health, conversions, and AI mentions.
+- Evidence first: separate confirmed issues (backed by a URL, response header, crawl export, or report you actually checked) from hypotheses, and label them as such.
+- Full audits end with a roadmap split into Now / Next / Later. Skip the roadmap for narrow single-question tasks.

@@ -51,19 +51,19 @@
       "overrides": {}
     },
     "e2e-test-engineer": {
-      "description": "Use this agent when you need to create, review, or optimize end-to-end tests using Playwright. This includes writing new E2E test suites for features or user workflows, reviewing existing E2E test code for best practices and maintainability, debugging flaky or failing E2E tests, setting up or maintaining CI/CD pipeline configurations for E2E testing, optimizing test performance and execution strategies, providing guidance on test architecture, page object models, and test organization, refactoring legacy E2E tests for better reliability.",
+      "description": "Use this agent to create, review, or debug Playwright end-to-end tests: new E2E suites, flaky test diagnosis and fixes, CI configuration for E2E runs, and test architecture (fixtures, page objects, organization).",
       "color": "cyan",
       "overrides": {}
     },
     "frontend-architect": {
-      "description": "Expert in modern web architecture, performance, and component design. You are the technical lead. You decide \"how\" the system is built and how data flows through it.",
+      "description": "Use this agent to define frontend technical strategy: application structure, state management architecture, data flow, rendering strategy, API integration layers, and performance strategy. Decides how the frontend is built and hands implementation to frontend-engineer. Not for writing component code or visual design.",
       "color": "orange",
       "overrides": {
         "claude": { "model": "opus" }
       }
     },
     "frontend-engineer": {
-      "description": "Use this agent when the user needs to define high-level technical strategies, project structures, or complex data flow patterns. This includes choosing the technology stack, setting up state management architecture, implementing API integration layers, and establishing coding standards for TypeScript environments. This agent handles the structural integrity and scalability of the application rather than granular UI implementation.",
+      "description": "Use this agent to implement frontend code: React/Next.js/React Native components, styling from design tokens, hooks, client-side data fetching, and unit/integration tests. Use for writing or fixing UI code. Does NOT choose architecture, state libraries, or visual design.",
       "color": "yellow",
       "overrides": {
         "opencode": { "temperature": 0.4 }
@@ -77,7 +77,7 @@
       }
     },
     "principal-engineer": {
-      "description": "Use this agent when you need expert guidance on technical leadership at the principal level, including comprehensive code reviews, technical strategy, architecture decisions, mentoring, and organizational technical influence. This agent combines deep technical expertise with leadership responsibilities across multiple technology stacks.",
+      "description": "Use this agent to REVIEW existing code, designs, or architecture at a senior level: code reviews, design reviews, and risk assessment of proposed changes. Returns a verdict with severity-ranked findings. For designing new solutions or migration plans use staff-engineer instead.",
       "color": "red",
       "overrides": {
         "claude": { "model": "opus" }
@@ -99,7 +99,7 @@
       }
     },
     "staff-engineer": {
-      "description": "Use this agent when you need guidance on technical leadership, cross-team technical coordination, system architecture decisions, technical mentoring, or strategic technical planning. Examples include defining technical standards, solving complex technical problems, coordinating large technical initiatives, or providing technical direction across teams.",
+      "description": "Use this agent to DESIGN solutions for complex or cross-cutting technical problems: system design options, migration and refactoring plans, technical standards, and trade-off analysis spanning multiple teams or services. For reviewing existing code or designs use principal-engineer instead.",
       "color": "purple",
       "overrides": {
         "claude": { "model": "opus" }
@@ -111,7 +111,7 @@
       "overrides": {}
     },
     "ux-ui-architect": {
-      "description": "Use this agent if there are considering any frontend application, any changes to components. Everything that could have an impact for UX and UI in any application.",
+      "description": "Use this agent for visual and interaction design decisions: design systems, design tokens, component blueprints, user flows, accessibility specs, and Figma design extraction. Not for writing functional code, choosing frameworks, or state management.",
       "color": "cyan",
       "overrides": {
         "claude": { "model": "opus" },

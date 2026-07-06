@@ -106,7 +106,8 @@ describe("buildAgents", () => {
       join(OUTPUT_DIR, ".claude", "agents", "test-agent.md"),
       "utf-8",
     );
-    expect(claudeFile.startsWith("<!-- GENERATED FILE")).toBe(true);
+    expect(claudeFile.startsWith("---")).toBe(true);
+    expect(claudeFile).toContain("<!-- GENERATED FILE");
   });
 });
 

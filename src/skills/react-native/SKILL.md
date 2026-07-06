@@ -1,40 +1,19 @@
 ---
 name: react-native
-description: Reusable React Native and Expo guidance for architecture, navigation, device constraints, performance, and mobile-specific testing and release quality.
-metadata:
-  short-description: React Native and Expo implementation standards
+description: "Use when writing or reviewing React Native or Expo code - navigation, native modules, lists and animation performance, offline behavior, OTA updates, or store release concerns."
 ---
 
 # React Native
 
-Use this skill when implementing or reviewing React Native or Expo applications.
+The `react` skill applies in full — this file is mobile deltas only.
 
-## Platform Baseline
+## House Rules
 
-- Align implementation with current React Native architecture expectations (Fabric/TurboModules) for new work.
-- Use Expo workflow capabilities intentionally (managed/native, OTA updates, build pipeline) based on release constraints.
-- Treat iOS and Android behavior differences as first-class requirements.
-
-## Mobile UI and Interaction
-
-- Respect safe areas, device notches, orientation changes, and varied screen densities.
-- Use platform-appropriate navigation patterns and keep deep-link/state restoration flows deterministic.
-- Handle gestures, animations, and touch targets with accessibility and responsiveness in mind.
-
-## State, Storage, and Networking
-
-- Separate transient view state from persisted/offline-capable state.
-- Define clear synchronization strategy for local storage, cache invalidation, and reconnect scenarios.
-- Guard mobile network calls with timeout, retry, and background/foreground lifecycle awareness.
-
-## Mobile Performance
-
-- Keep list rendering efficient with virtualization and stable item keys.
-- Avoid unnecessary bridge traffic and heavy work on critical interaction paths.
-- Optimize images/assets by format, size, and resolution per device tier.
-
-## Reliability, Testing, and Delivery
-
-- Test critical paths on multiple devices, OS versions, and screen sizes.
-- Validate startup/splash behavior, permissions, background handling, and push/deep-link entry paths.
-- Include end-to-end coverage for high-risk mobile flows and release gating checks.
+- **Target the New Architecture** (Fabric, TurboModules, JSI). It is the default on current RN; "avoid bridge traffic" framing and old-architecture workarounds are obsolete advice — don't cargo-cult them into new code.
+- **Long lists use FlashList, not FlatList**, with `estimatedItemSize` set. FlatList is acceptable only for short, static lists where recycling doesn't pay off.
+- **Animations and gestures run on the UI thread:** Reanimated worklets + Gesture Handler. The classic `Animated` API is fine for a one-off fade; anything interactive or gesture-driven on the JS thread will jank.
+- **Navigation in Expo apps is expo-router** (file-based). Don't hand-wire React Navigation stacks in an Expo project that already has a `app/` route tree.
+- **EAS Update (OTA) ships JS only.** Adding or upgrading a native module, changing `app.json`/plugins, or touching native config requires a new binary build and store submission — an OTA push will not carry it, it will crash against the old native runtime.
+- **Performance isn't done until it's smooth on a low-end Android device.** Simulator-on-M-series proves nothing; test release builds on real budget hardware.
+- **Safe areas come from `react-native-safe-area-context`** (`SafeAreaView`/`useSafeAreaInsets`). Never hardcoded padding for notches and home indicators — device geometry varies too much.
+- **iOS and Android differences are requirements, not edge cases:** back gesture/button, keyboard avoidance, permission flows, and shadow/elevation all diverge — verify both.

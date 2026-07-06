@@ -1,51 +1,25 @@
 ---
 name: node-js
-description: Reusable Node.js/TypeScript/JavaScript engineering guidance for runtime behavior, typing discipline, tooling, testing, and production reliability.
-metadata:
-  short-description: Node.js and TypeScript backend implementation standards
+description: "Use when writing or reviewing Node.js backend or service code - async error handling, graceful shutdown, ESM/CJS interop, TypeScript strictness, or production reliability. Not for frontend code."
 ---
 
 # Node.js
 
-Use this skill when implementing or reviewing JavaScript/TypeScript backend services on Node.js.
+## House Rules
 
-## Runtime and Tooling Baseline
+- **Branded types for IDs.** `type UserId = string & { readonly __brand: 'UserId' }` — a `UserId` can never be passed where an `OrderId` is expected. Plain `string` IDs are a standing invitation to swap arguments.
+- **Discriminated unions for operation results and state variants**, not booleans-plus-nullable-fields:
 
-- Prefer active Node.js LTS versions and lock dependency trees with a committed lockfile.
-- Keep scripts deterministic across environments (local, CI, container) and fail fast on config errors.
-- Be explicit about module strategy (ESM vs CJS) and avoid mixed-import edge cases.
-- Externalize operational config through environment variables and validate required values at startup.
+  ```ts
+  type SaveResult = { ok: true; id: UserId } | { ok: false; reason: 'conflict' | 'validation' };
+  ```
 
-## TypeScript and JavaScript Standards
+  Callers must switch on the tag; impossible states become unrepresentable.
+- **Every outbound I/O call gets an `AbortController`/timeout.** No unbounded `await` on HTTP, DB, or queue calls — a hung dependency must fail your call, not your event loop.
+- **Validate `process.env` at startup against a schema and fail fast.** One typed config module; never scatter `process.env` reads through the codebase. A missing var should kill boot, not surface as `undefined` three layers deep at 2 a.m.
+- **Graceful shutdown is a sequence:** stop accepting new work → drain in-flight requests → close pools/connections — under a hard deadline (then exit non-zero).
+- **Unhandled rejection = crash and restart.** Do not install a swallowing handler; a process in unknown state is worse than a dead one.
+- **ESM vs CJS: pick one per package and stay consistent.** Interop half-measures (`require` of ESM, dual builds without care) produce the weirdest runtime bugs in the ecosystem.
+- **`tsc` passing is not runtime safety.** Types vanish at the boundary — parse external input (HTTP bodies, queue messages, third-party responses) with a runtime validator before trusting it.
 
-- Enable strict TypeScript settings and avoid `any` unless narrowly scoped and justified.
-- Define shared contracts for DTOs, commands, queries, and events with precise domain-focused names.
-- Prefer discriminated unions for state variants and result types.
-- Use branded/opaque types for domain primitives (for example IDs, emails, and currency values).
-- Treat type assertions as last resort; prefer safe narrowing and parser/validator-based decoding.
-
-## Node.js Reliability Patterns
-
-- Handle async errors explicitly; never allow unhandled promise rejections in production paths.
-- Apply timeouts, retries with jitter, and cancellation (`AbortController`) for outbound I/O.
-- Implement graceful shutdown (`SIGTERM`/`SIGINT`) with connection draining and in-flight request handling.
-- Keep the event loop responsive: avoid CPU-heavy work on request paths; offload to workers/jobs.
-
-## Boundary Validation and Contracts
-
-- Validate untrusted input at system boundaries (HTTP, queue consumers, cron triggers).
-- Map transport models to domain models through explicit translators to avoid leakage.
-- Version external contracts (APIs/events) and preserve backward compatibility during evolution.
-
-## Testing in Node Ecosystems
-
-- Keep unit tests fast and isolated; mock external systems and use deterministic fixtures/builders.
-- Add integration tests for persistence, messaging, and HTTP adapters against realistic dependencies.
-- Verify negative paths: timeouts, retries, malformed payloads, duplicate delivery, and partial failures.
-- Use fake timers carefully for time-dependent logic and reset global state between tests.
-
-## Observability and Operability
-
-- Emit structured logs with correlation/request IDs and avoid logging secrets or PII.
-- Capture key metrics (latency, error rates, queue lag, retry counts) and expose health/readiness checks.
-- Ensure startup logs include version/build metadata to support incident triage.
+For Fastify-specific patterns load the `fastify` skill.

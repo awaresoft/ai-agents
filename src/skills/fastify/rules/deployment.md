@@ -7,426 +7,79 @@ metadata:
 
 # Production Deployment
 
-## Graceful Shutdown with close-with-grace
+## Graceful Shutdown: close-with-grace
 
-Use `close-with-grace` for proper shutdown handling:
+House rule: shutdown goes through `close-with-grace`, not hand-rolled `process.on("SIGTERM")`. It handles signals AND uncaught errors, and enforces a hard deadline if `app.close()` hangs. `app.close()` runs `onClose` hooks in reverse registration order — plugins (DB pools, queues) clean up automatically.
 
 ```typescript
-import Fastify from "fastify";
 import closeWithGrace from "close-with-grace";
 
-const app = Fastify({ logger: true });
-
-// Register plugins and routes
-await app.register(import("./plugins/index.js"));
-await app.register(import("./routes/index.js"));
-
-// Graceful shutdown handler
 closeWithGrace({ delay: 10000 }, async ({ signal, err }) => {
-  if (err) {
-    app.log.error({ err }, "Server closing due to error");
-  } else {
-    app.log.info({ signal }, "Server closing due to signal");
-  }
-
+  if (err) app.log.error({ err }, "Server closing due to error");
+  else app.log.info({ signal }, "Server closing due to signal");
   await app.close();
 });
 
-// Start server
-await app.listen({
-  port: parseInt(process.env.PORT || "3000", 10),
-  host: "0.0.0.0",
-});
-
-app.log.info(`Server listening on ${app.server.address()}`);
+await app.listen({ port: app.config.PORT, host: "0.0.0.0" });
 ```
 
-## Health Check Endpoints
+`host: "0.0.0.0"` is mandatory in containers — the default `localhost` is unreachable from outside the container.
 
-Implement comprehensive health checks:
+## Health Checks: liveness vs readiness
+
+Split them. `/health/live` returns `{ status: "ok" }` unconditionally (process is up — a failing liveness probe causes restarts, so never tie it to dependencies). `/health/ready` checks dependencies and returns **503** when any is down, so the orchestrator stops routing traffic without restarting the pod:
 
 ```typescript
-app.get("/health", async () => {
-  return { status: "ok", timestamp: new Date().toISOString() };
-});
-
-app.get("/health/live", async () => {
-  return { status: "ok" };
-});
-
 app.get("/health/ready", async (request, reply) => {
-  const checks = {
-    database: false,
-    cache: false,
-  };
-
-  try {
-    await app.db`SELECT 1`;
-    checks.database = true;
-  } catch {
-    // Database not ready
-  }
-
-  try {
-    await app.cache.ping();
-    checks.cache = true;
-  } catch {
-    // Cache not ready
-  }
-
+  const checks = { database: await app.checkDatabaseHealth() };
   const allHealthy = Object.values(checks).every(Boolean);
-
-  if (!allHealthy) {
-    reply.code(503);
-  }
-
-  return {
-    status: allHealthy ? "ok" : "degraded",
-    checks,
-    timestamp: new Date().toISOString(),
-  };
-});
-
-// Detailed health for monitoring
-app.get(
-  "/health/details",
-  {
-    preHandler: [app.authenticate, app.requireAdmin],
-  },
-  async () => {
-    const memory = process.memoryUsage();
-
-    return {
-      status: "ok",
-      uptime: process.uptime(),
-      memory: {
-        heapUsed: Math.round(memory.heapUsed / 1024 / 1024),
-        heapTotal: Math.round(memory.heapTotal / 1024 / 1024),
-        rss: Math.round(memory.rss / 1024 / 1024),
-      },
-      version: process.env.APP_VERSION,
-      nodeVersion: process.version,
-    };
-  },
-);
-```
-
-## Docker Configuration
-
-Create an optimized Dockerfile:
-
-```dockerfile
-# Build stage
-FROM node:22-alpine AS builder
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci --only=production
-
-COPY . .
-
-# Production stage
-FROM node:22-alpine
-
-WORKDIR /app
-
-# Run as non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
-
-# Copy from builder
-COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nodejs:nodejs /app/src ./src
-COPY --from=builder --chown=nodejs:nodejs /app/package.json ./
-
-USER nodejs
-
-EXPOSE 3000
-
-ENV NODE_ENV=production
-ENV PORT=3000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
-
-CMD ["node", "src/app.ts"]
-```
-
-```yaml
-# docker-compose.yml
-services:
-  api:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgres://user:pass@db:5432/app
-      - JWT_SECRET=${JWT_SECRET}
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: unless-stopped
-
-  db:
-    image: postgres:16-alpine
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
-      - POSTGRES_DB=app
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d app"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  pgdata:
-```
-
-## Kubernetes Deployment
-
-Deploy to Kubernetes:
-
-```yaml
-# deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: fastify-api
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: fastify-api
-  template:
-    metadata:
-      labels:
-        app: fastify-api
-    spec:
-      containers:
-        - name: api
-          image: my-registry/fastify-api:latest
-          ports:
-            - containerPort: 3000
-          env:
-            - name: NODE_ENV
-              value: "production"
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: api-secrets
-                  key: database-url
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-          livenessProbe:
-            httpGet:
-              path: /health/live
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /health/ready
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 5"]
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: fastify-api
-spec:
-  selector:
-    app: fastify-api
-  ports:
-    - port: 80
-      targetPort: 3000
-  type: ClusterIP
-```
-
-## Production Logger Configuration
-
-Configure logging for production:
-
-```typescript
-import Fastify from "fastify";
-
-const app = Fastify({
-  logger: {
-    level: process.env.LOG_LEVEL || "info",
-    // JSON output for log aggregation
-    formatters: {
-      level: (label) => ({ level: label }),
-      bindings: (bindings) => ({
-        pid: bindings.pid,
-        hostname: bindings.hostname,
-        service: "fastify-api",
-        version: process.env.APP_VERSION,
-      }),
-    },
-    timestamp: () => `,"time":"${new Date().toISOString()}"`,
-    // Redact sensitive data
-    redact: {
-      paths: [
-        "req.headers.authorization",
-        "req.headers.cookie",
-        "*.password",
-        "*.token",
-        "*.secret",
-      ],
-      censor: "[REDACTED]",
-    },
-  },
+  if (!allHealthy) reply.code(503);
+  return { status: allHealthy ? "ok" : "degraded", checks };
 });
 ```
 
-## Request Timeouts
+Exempt health routes from rate limiting and auth. A detailed `/health/details` (memory, uptime, version) should sit behind admin auth.
 
-Configure appropriate timeouts:
+## Kubernetes Gotchas
+
+- `preStop: exec: command: ["/bin/sh", "-c", "sleep 5"]` — gives the endpoint-removal a head start so in-flight routing drains before SIGTERM.
+- Liveness probe → `/health/live`, readiness probe → `/health/ready`. Pointing liveness at the dependency-checking route causes restart storms during a DB outage.
+- Docker: run as a non-root user, multi-stage build with `npm ci --only=production`, and a `HEALTHCHECK` hitting `/health`.
+
+## Timeouts and Proxy Trust
 
 ```typescript
 const app = Fastify({
-  connectionTimeout: 30000, // 30s connection timeout
-  keepAliveTimeout: 72000, // 72s keep-alive (longer than ALB 60s)
-  requestTimeout: 30000, // 30s request timeout
-  bodyLimit: 1048576, // 1MB body limit
-});
-
-// Per-route timeout
-app.get(
-  "/long-operation",
-  {
-    config: {
-      timeout: 60000, // 60s for this route
-    },
-  },
-  longOperationHandler,
-);
-```
-
-## Trust Proxy Settings
-
-Configure for load balancers:
-
-```typescript
-const app = Fastify({
-  // Trust first proxy (load balancer)
-  trustProxy: true,
-
-  // Or trust specific proxies
-  trustProxy: ["127.0.0.1", "10.0.0.0/8"],
-
-  // Or number of proxies to trust
-  trustProxy: 1,
-});
-
-// Now request.ip returns real client IP
-```
-
-## Static File Serving
-
-Serve static files efficiently. **Always use `import.meta.dirname` as the base path**, never `process.cwd()`:
-
-```typescript
-import fastifyStatic from "@fastify/static";
-import { join } from "node:path";
-
-app.register(fastifyStatic, {
-  root: join(import.meta.dirname, "..", "public"),
-  prefix: "/static/",
-  maxAge: "1d",
-  immutable: true,
-  etag: true,
-  lastModified: true,
+  connectionTimeout: 30000,
+  keepAliveTimeout: 72000, // MUST exceed the LB idle timeout (ALB 60s) or you get random 502s
+  requestTimeout: 30000,
+  bodyLimit: 1048576,
+  trustProxy: true, // else request.ip is the LB address
 });
 ```
 
-## Compression
+The `keepAliveTimeout > LB idle timeout` rule is the classic source of intermittent 502s behind ALBs.
 
-Enable response compression:
+## Logging, Compression, Static
 
-```typescript
-import fastifyCompress from "@fastify/compress";
+- Production logger: JSON to stdout, `redact` on `req.headers.authorization`, `req.headers.cookie`, `*.password`, `*.token`, `*.secret`. Never pretty-print in production.
+- `@fastify/compress` with `threshold: 1024` — compressing tiny payloads wastes CPU.
+- `@fastify/static`: root from `join(import.meta.dirname, "..", "public")` — **never `process.cwd()`** (breaks when the process starts from a different directory).
 
-app.register(fastifyCompress, {
-  global: true,
-  threshold: 1024, // Only compress > 1KB
-  encodings: ["gzip", "deflate"],
-});
-```
+## Prometheus Metrics
 
-## Metrics and Monitoring
-
-Expose Prometheus metrics:
+Record in an `onResponse` hook; label by `request.routeOptions.url` (the route PATTERN, e.g. `/users/:id`), never `request.url` — raw URLs explode label cardinality:
 
 ```typescript
-import { register, collectDefaultMetrics, Counter, Histogram } from "prom-client";
-
-collectDefaultMetrics();
-
-const httpRequestDuration = new Histogram({
-  name: "http_request_duration_seconds",
-  help: "Duration of HTTP requests in seconds",
-  labelNames: ["method", "route", "status"],
-  buckets: [0.01, 0.05, 0.1, 0.5, 1, 5],
-});
-
-const httpRequestTotal = new Counter({
-  name: "http_requests_total",
-  help: "Total number of HTTP requests",
-  labelNames: ["method", "route", "status"],
-});
-
 app.addHook("onResponse", (request, reply, done) => {
-  const route = request.routeOptions.url || request.url;
   const labels = {
     method: request.method,
-    route,
+    route: request.routeOptions.url || request.url,
     status: reply.statusCode,
   };
-
   httpRequestDuration.observe(labels, reply.elapsedTime / 1000);
-  httpRequestTotal.inc(labels);
   done();
 });
-
-app.get("/metrics", async (request, reply) => {
-  reply.header("Content-Type", register.contentType);
-  return register.metrics();
-});
 ```
 
-## Zero-Downtime Deployments
-
-Support rolling updates:
-
-```typescript
-import closeWithGrace from "close-with-grace";
-
-// Stop accepting new connections gracefully
-closeWithGrace({ delay: 30000 }, async ({ signal }) => {
-  app.log.info({ signal }, "Received shutdown signal");
-
-  // Stop accepting new connections
-  // Existing connections continue to be served
-
-  // Wait for in-flight requests (handled by close-with-grace delay)
-  await app.close();
-
-  app.log.info("Server closed");
-});
-```
+`reply.elapsedTime` is milliseconds — divide by 1000 for seconds-based histograms.

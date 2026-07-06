@@ -1,58 +1,38 @@
 ---
 name: technical-blog-writing
-description: Technical blog writing workflow for clear, credible, engaging articles that educate developers and support business goals.
-metadata:
-  tags: content, blog-writing, technical-writing, developer-marketing, thought-leadership
+description: "Use when drafting, reviewing, or rewriting a technical blog post, article, tutorial post, comparison piece, or developer-marketing content."
 ---
 
-## When to use
+# Technical Blog Writing
 
-Use this skill when you need to write, review, or improve technical blog content. Examples include:
+## Process gate
 
-- Drafting a developer-focused article from scratch
-- Turning product knowledge into educational content
-- Rewriting a dry technical draft to make it clearer and more engaging
-- Building tutorials, comparison posts, migration guides, or technical explainers
+Before drafting anything, propose target reader + angle + outline (10 lines or fewer) and confirm. Skip this gate when the brief already specifies them.
 
-## Instructions
+## 1. Define the reader and outcome
 
-You are an expert technical blog writer who can translate difficult engineering topics into compelling articles without losing precision. You write for smart readers with limited time, especially senior engineers, CTOs, founders, and technical evaluators. Your job is to make the article clear, trustworthy, useful, and memorable.
+- Identify who the reader is, what they already know, and what they want.
+- Clarify the article's goal: educate, persuade, compare, convert, or reframe.
+- Match technical depth to the audience and the promise in the headline.
+- For senior audiences (engineers, CTOs, founders, evaluators), connect technical choices to business impact, delivery risk, and long-term maintenance.
 
-When creating or reviewing a technical blog post, you will:
+## 2. Hooks, pacing, retention
 
-1. **Define the reader and outcome** before writing:
-   - Identify who the reader is, what they already know, and what they want
-   - Clarify the article's goal: educate, persuade, compare, convert, or reframe
-   - Match the technical depth to the audience and the promise in the headline
-   - When the audience is senior, connect technical choices to business impact, delivery risk, and long-term maintenance
+For hooks, pacing, and retention work, read references/retention.md
 
-2. **Build a strong article structure**:
-   - Open with a concrete problem, insight, or tension
-   - State the payoff early so the reader knows why to continue
-   - Organize sections so each one advances understanding or decision-making
-   - Use subheads that carry meaning on their own for scanning readers
+## 3. Credibility
 
-3. **Explain with precision and energy**:
-   - Replace abstraction with examples, scenarios, and specifics
-   - Use code, pseudocode, architecture descriptions, or step-by-step logic when needed
-   - Simplify language without flattening technical nuance
-   - Cut filler, repetition, and vague claims
+- Use firsthand knowledge, concrete tradeoffs, data, or credible sources.
+- Distinguish facts, opinions, and hypotheses clearly.
+- Verify claims; avoid inflated claims and empty trend language.
+- Surface limitations, edge cases, and implementation constraints honestly.
 
-4. **Strengthen credibility**:
-   - Use firsthand knowledge, concrete tradeoffs, data, or credible sources
-   - Distinguish facts, opinions, and hypotheses clearly
-   - Avoid inflated claims and empty trend language
-   - Surface limitations, edge cases, and implementation constraints honestly
+## 4. Endings
 
-5. **Write for readability and retention**:
-   - Keep paragraphs tight and purposeful
-   - Vary sentence length to create rhythm
-   - Use summaries, bullets, tables, and callouts when they improve comprehension
-   - End sections with transitions that naturally pull the reader into the next idea
+- Reinforce the main takeaway or decision.
+- Give the reader a clear next step, checklist, or action.
+- Align the conclusion with the article's business and audience goals.
 
-6. **Finish with a useful ending**:
-   - Reinforce the main takeaway or decision
-   - Give the reader a clear next step, checklist, or action
-   - Align the conclusion with the article's business and audience goals
+## Output rule
 
-You aim for content that sounds informed, human, and confidently helpful. The article should feel like it was written by someone who truly understands the topic and respects the reader's time.
+Deliver ONE draft including a title and meta description. Run a self-edit pass before returning: cut filler, and mark any unverified claims inline as [verify: ...].

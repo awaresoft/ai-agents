@@ -1,40 +1,22 @@
 ---
 name: next-js
-description: Reusable Next.js guidance for App Router architecture, rendering strategy, data mutations, caching, routing, and deployment-safe runtime behavior.
-metadata:
-  short-description: Next.js App Router implementation standards
+description: "Use when building, reviewing, or debugging a Next.js App Router app - Server and Client Components, Server Actions, caching and revalidation, middleware/proxy, or edge versus node runtime issues."
 ---
 
-# Next.js
+# Next.js (App Router)
 
-Use this skill when implementing or reviewing Next.js applications.
+The `react` skill applies in full — this file is App Router deltas only.
 
-## App Router Architecture
+## Version Gotchas (Next 15+)
 
-- Default to Server Components and introduce Client Components only for interactive client-only concerns.
-- Keep route segment boundaries intentional (`layout`, `page`, `loading`, `error`, `not-found`).
-- Co-locate data dependencies with route segments to reduce waterfall requests.
+- **`fetch()` is NOT cached by default anymore.** Pre-15 advice about implicit caching is wrong; opt in with `cache: 'force-cache'` or segment-level `revalidate`.
+- **`params` and `searchParams` are async** — `await` them in pages, layouts, and route handlers. Sync access is a deprecation-then-break.
+- **`middleware.ts` is renamed `proxy.ts` in Next 16.** Check which the repo uses before editing.
 
-## Rendering and Caching Strategy
+## House Rules
 
-- Choose rendering mode per route based on freshness and latency needs (static generation, dynamic rendering, revalidation).
-- Use caching and revalidation deliberately and document invalidation triggers.
-- Avoid over-fetching in client components when server-side fetching can reduce bundle size.
-
-## Mutations and Server Actions
-
-- Use Server Actions for trusted, co-located mutations when they simplify client-server boundaries.
-- Validate action inputs and handle expected failure states explicitly.
-- Keep optimistic UI behavior consistent with server truth and revalidation logic.
-
-## Routing and Middleware
-
-- Use middleware sparingly for cross-cutting concerns (auth, localization, redirects) and keep it fast.
-- Ensure route transitions preserve accessibility and predictable loading/error experiences.
-- Keep route handlers thin and delegate business logic to dedicated service layers.
-
-## Performance and Operations
-
-- Monitor Core Web Vitals, hydration costs, and route-level bundle sizes.
-- Prefer streaming and partial rendering where it materially improves perceived performance.
-- Verify environment configuration for edge vs node runtimes and avoid unsupported APIs.
+- **Server Components by default.** Add `'use client'` only at interactive leaves — never on layouts or whole pages "to be safe". Each directive pulls its subtree into the client bundle.
+- **Server Actions are public HTTP endpoints.** Every action validates input with Zod and checks auth inside the action body — proximity to a component grants zero protection. After a successful mutation, call `revalidatePath`/`revalidateTag`.
+- **Rendering decision ladder:** static by default → time-based freshness needs `export const revalidate` → per-request data uses dynamic APIs (`cookies()`, `headers()`) → `export const dynamic = 'force-dynamic'` only as a last resort, never as a debugging shortcut.
+- **Edge runtime has no Node built-ins** (`fs`, `net`, most of `crypto`). Set `export const runtime` explicitly wherever it matters instead of relying on inference.
+- **Read the repo's `next.config` before advising on caching.** Behavior differs by version and flags (PPR, cacheComponents, staleTimes) — never answer from generic memory.

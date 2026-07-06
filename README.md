@@ -81,16 +81,11 @@ Skills are shared across all platforms.
 
 ### SEO, Discoverability & Measurement
 
-- **seo-inspection** — Full-spectrum audits spanning technical SEO, content quality, and AI search readiness.
-- **technical-seo-audit** — Crawlability, rendering, indexation, canonicals, and structured-data validation.
-- **seo-content-strategy** — Search-intent mapping, internal linking, and topical authority planning.
-- **ai-search-optimization** — LLM retrieval, AI Overview readiness, and citation-friendly content design.
-- **seo-measurement-observability** — KPI frameworks, crawl monitoring, and discoverability reporting.
+- **seo-inspection** — SEO audits routed through topic references: technical audit, content strategy, AI search readiness, and measurement.
 
 ### Content & Editorial
 
-- **technical-blog-writing** — Developer-focused article writing with strong structure and examples.
-- **attention-retention-writing** — Hooks, pacing, transitions, and engagement techniques for stronger read-through.
+- **technical-blog-writing** — Developer-focused article writing; includes a retention/hooks reference for pacing work.
 - **blog-editorial-strategy** — Topic framing, audience alignment, and content-program planning.
 
 ### Commerce Platform Expertise

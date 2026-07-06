@@ -1,24 +1,25 @@
 ---
 name: fastify
-description: Comprehensive best practices for Fastify development
-metadata:
-  tags: fastify, nodejs, typescript, backend, api, server, http
+description: "Use when writing or reviewing Fastify code - plugins, routes, hooks, decorators, JSON Schema or TypeBox validation, inject() testing, Pino logging, or Fastify TypeScript typing."
 ---
 
-## When to use
+# Fastify
 
-Use this skill when you need to:
+The `node-js` skill applies underneath — this file adds Fastify house rules and routes to detailed topic files.
 
-- Develop backend applications using Fastify
-- Implement Fastify plugins and route handlers
-- Get guidance on Fastify architecture and patterns
-- Use TypeScript with Fastify (strip types)
-- Implement testing with Fastify's inject method
-- Configure validation, serialization, and error handling
+## House Rules
 
-## How to use
+- **TypeBox over raw JSON Schema** for all route schemas — one source for validation, serialization, and static types.
+- **Schema on EVERY route, including `response` serialization schemas.** Response schemas are both the contract and a major perf win (fast-json-stringify); omitting them is not neutral.
+- **Tests use `fastify.inject()` + `node:test`.** No supertest, no listening on real ports.
+- **Plugins are encapsulated by default.** Wrap with `fastify-plugin` ONLY when a plugin must share decorators/hooks with siblings — reaching for `fp()` everywhere destroys encapsulation, Fastify's core feature.
+- **Log via `request.log`** (the per-request child logger with req-id), never `console.*`.
+- **Register order matters:** plugins → decorators → hooks → routes, in that order within a scope.
+- **Async handlers return values.** Never mix callback style (`reply.send` + done) with async/return in one handler.
 
-Read individual rule files for detailed explanations and code examples:
+## Topic Files
+
+Read a rule file ONLY when the task touches its topic; never load more than 2-3 per task.
 
 - [rules/plugins.md](rules/plugins.md) - Plugin development and encapsulation
 - [rules/routes.md](rules/routes.md) - Route organization and handlers
@@ -39,11 +40,3 @@ Read individual rule files for detailed explanations and code examples:
 - [rules/configuration.md](rules/configuration.md) - Application configuration
 - [rules/deployment.md](rules/deployment.md) - Production deployment
 - [rules/http-proxy.md](rules/http-proxy.md) - HTTP proxying and reply.from()
-
-## Core Principles
-
-- **Encapsulation**: Fastify's plugin system provides automatic encapsulation
-- **Schema-first**: Define schemas for validation and serialization
-- **Performance**: Fastify is optimized for speed; use its features correctly
-- **Async/await**: All handlers and hooks support async functions
-- **Minimal dependencies**: Prefer Fastify's built-in features and official plugins

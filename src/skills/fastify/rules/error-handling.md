@@ -7,73 +7,36 @@ metadata:
 
 # Error Handling in Fastify
 
-## Default Error Handler
+## Typed Errors via @fastify/error
 
-Fastify has a built-in error handler. Thrown errors automatically become HTTP responses:
-
-```typescript
-import Fastify from "fastify";
-
-const app = Fastify({ logger: true });
-
-app.get("/users/:id", async (request) => {
-  const user = await findUser(request.params.id);
-  if (!user) {
-    // Throwing an error with statusCode sets the response status
-    const error = new Error("User not found");
-    error.statusCode = 404;
-    throw error;
-  }
-  return user;
-});
-```
-
-## Custom Error Classes
-
-Use `@fastify/error` for creating typed errors:
+House rule: domain errors are `@fastify/error` classes, not ad-hoc `error.statusCode = 404` mutations. `createError(code, messageTemplate, statusCode)` gives you a `code`, printf-style message, and status in one place:
 
 ```typescript
 import createError from "@fastify/error";
 
 const NotFoundError = createError("NOT_FOUND", "%s not found", 404);
-const UnauthorizedError = createError("UNAUTHORIZED", "Authentication required", 401);
-const ForbiddenError = createError("FORBIDDEN", "Access denied: %s", 403);
-const ValidationError = createError("VALIDATION_ERROR", "%s", 400);
 const ConflictError = createError("CONFLICT", "%s already exists", 409);
 
-// Usage
 app.get("/users/:id", async (request) => {
   const user = await findUser(request.params.id);
-  if (!user) {
-    throw new NotFoundError("User");
-  }
+  if (!user) throw new NotFoundError("User");
   return user;
-});
-
-app.post("/users", async (request) => {
-  const exists = await userExists(request.body.email);
-  if (exists) {
-    throw new ConflictError("Email");
-  }
-  return createUser(request.body);
 });
 ```
 
-## Custom Error Handler
+Async handler throws are caught automatically — no try/catch plumbing. Wrap external failures with context and preserve the chain: `throw new DatabaseError(error.message, { cause: error })`.
 
-Implement a centralized error handler:
+## Central Error Handler
+
+One `setErrorHandler` at the root. Non-obvious points:
+
+- **Validation errors carry `error.validation`** (array of Ajv issues) and `error.validationContext` (`"body" | "params" | ...`). Branch on it first. Field path is `err.instancePath.slice(1).replace(/\//g, ".")`, or `err.params?.missingProperty` for missing required fields.
+- **Mask 5xx messages in production** — internal error text leaks stack/SQL details.
 
 ```typescript
-import Fastify from "fastify";
-import type { FastifyError, FastifyRequest, FastifyReply } from "fastify";
-
-const app = Fastify({ logger: true });
-
-app.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
-  // Log the error
+app.setErrorHandler((error, request, reply) => {
   request.log.error({ err: error }, "Request error");
 
-  // Handle validation errors
   if (error.validation) {
     return reply.code(400).send({
       statusCode: 400,
@@ -83,343 +46,30 @@ app.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: Fastif
     });
   }
 
-  // Handle known errors with status codes
   const statusCode = error.statusCode ?? 500;
-  const code = error.code ?? "INTERNAL_ERROR";
-
-  // Don't expose internal error details in production
   const message =
     statusCode >= 500 && process.env.NODE_ENV === "production"
       ? "Internal Server Error"
       : error.message;
 
-  return reply.code(statusCode).send({
-    statusCode,
-    error: code,
-    message,
-  });
+  return reply.code(statusCode).send({ statusCode, error: error.code ?? "INTERNAL_ERROR", message });
 });
 ```
 
-## Error Response Schema
+`setErrorHandler` is **encapsulated**: registering one inside a plugin scopes it to that plugin's routes and overrides the root handler there. Same for `setNotFoundHandler` (customize 404s; note it accepts its own hook options).
 
-Define consistent error response schemas:
+## Hooks: throw vs reply
 
-```typescript
-app.addSchema({
-  $id: "httpError",
-  type: "object",
-  properties: {
-    statusCode: { type: "integer" },
-    error: { type: "string" },
-    message: { type: "string" },
-    details: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          field: { type: "string" },
-          message: { type: "string" },
-        },
-      },
-    },
-  },
-  required: ["statusCode", "error", "message"],
-});
+Errors thrown in hooks go through the same error handler. If you instead send the response directly in a hook (`reply.code(401).send(...)`), you MUST `return` afterwards — otherwise the lifecycle continues into the handler.
 
-// Use in route schemas
-app.get(
-  "/users/:id",
-  {
-    schema: {
-      params: {
-        type: "object",
-        properties: { id: { type: "string" } },
-        required: ["id"],
-      },
-      response: {
-        200: { $ref: "user#" },
-        404: { $ref: "httpError#" },
-        500: { $ref: "httpError#" },
-      },
-    },
-  },
-  handler,
-);
-```
+## Error Response Schemas
 
-## Reply Helpers with @fastify/sensible
+Declare error shapes in `schema.response` (`404: { $ref: "httpError#" }`) — a shared `httpError` schema added once via `app.addSchema({ $id: "httpError", ... })`. Without a response schema for the error status, the serializer falls back to full JSON.stringify; with one, error fields not in the schema are silently dropped — align the schema with what your error handler actually sends.
 
-Use `@fastify/sensible` for standard HTTP errors:
+## @fastify/sensible
 
-```typescript
-import fastifySensible from "@fastify/sensible";
+Register it for standard HTTP error helpers: `reply.notFound(msg)`, `reply.forbidden(msg)`, `reply.conflict(msg)`, etc. Prefer these over hand-built error objects for one-off HTTP errors; keep `@fastify/error` classes for reusable domain errors.
 
-app.register(fastifySensible);
+## Partial Failure
 
-app.get("/users/:id", async (request, reply) => {
-  const user = await findUser(request.params.id);
-  if (!user) {
-    return reply.notFound("User not found");
-  }
-  if (!hasAccess(request.user, user)) {
-    return reply.forbidden("You cannot access this user");
-  }
-  return user;
-});
-
-// Available methods:
-// reply.badRequest(message?)
-// reply.unauthorized(message?)
-// reply.forbidden(message?)
-// reply.notFound(message?)
-// reply.methodNotAllowed(message?)
-// reply.conflict(message?)
-// reply.gone(message?)
-// reply.unprocessableEntity(message?)
-// reply.tooManyRequests(message?)
-// reply.internalServerError(message?)
-// reply.notImplemented(message?)
-// reply.badGateway(message?)
-// reply.serviceUnavailable(message?)
-// reply.gatewayTimeout(message?)
-```
-
-## Async Error Handling
-
-Errors in async handlers are automatically caught:
-
-```typescript
-// Errors are automatically caught and passed to error handler
-app.get("/users", async (request) => {
-  const users = await db.users.findAll(); // If this throws, error handler catches it
-  return users;
-});
-
-// Explicit error handling for custom logic
-app.get("/users/:id", async (request, reply) => {
-  try {
-    const user = await db.users.findById(request.params.id);
-    if (!user) {
-      return reply.code(404).send({ error: "User not found" });
-    }
-    return user;
-  } catch (error) {
-    // Transform database errors
-    if (error.code === "CONNECTION_ERROR") {
-      request.log.error({ err: error }, "Database connection failed");
-      return reply.code(503).send({ error: "Service temporarily unavailable" });
-    }
-    throw error; // Re-throw for error handler
-  }
-});
-```
-
-## Hook Error Handling
-
-Errors in hooks are handled the same way:
-
-```typescript
-app.addHook("onRequest", async (request, reply) => {
-  const token = request.headers.authorization;
-  if (!token) {
-    // This error goes to the error handler
-    throw new UnauthorizedError();
-  }
-
-  try {
-    request.user = await verifyToken(token);
-  } catch (error) {
-    throw new UnauthorizedError();
-  }
-});
-
-// Or use reply to send response directly
-app.addHook("onRequest", async (request, reply) => {
-  if (!request.headers.authorization) {
-    reply.code(401).send({ error: "Unauthorized" });
-    return; // Must return to stop processing
-  }
-});
-```
-
-## Not Found Handler
-
-Customize the 404 response:
-
-```typescript
-app.setNotFoundHandler(async (request, reply) => {
-  return reply.code(404).send({
-    statusCode: 404,
-    error: "Not Found",
-    message: `Route ${request.method} ${request.url} not found`,
-  });
-});
-
-// With schema validation
-app.setNotFoundHandler(
-  {
-    preValidation: async (request, reply) => {
-      // Pre-validation hook for 404 handler
-    },
-  },
-  async (request, reply) => {
-    return reply.code(404).send({ error: "Not Found" });
-  },
-);
-```
-
-## Error Wrapping
-
-Wrap external errors with context:
-
-```typescript
-import createError from "@fastify/error";
-
-const DatabaseError = createError("DATABASE_ERROR", "Database operation failed: %s", 500);
-const ExternalServiceError = createError(
-  "EXTERNAL_SERVICE_ERROR",
-  "External service failed: %s",
-  502,
-);
-
-app.get("/users/:id", async (request) => {
-  try {
-    return await db.users.findById(request.params.id);
-  } catch (error) {
-    throw new DatabaseError(error.message, { cause: error });
-  }
-});
-
-app.get("/weather", async (request) => {
-  try {
-    return await weatherApi.fetch(request.query.city);
-  } catch (error) {
-    throw new ExternalServiceError(error.message, { cause: error });
-  }
-});
-```
-
-## Validation Error Customization
-
-Customize validation error format:
-
-```typescript
-app.setErrorHandler((error, request, reply) => {
-  if (error.validation) {
-    const details = error.validation.map((err) => {
-      const field = err.instancePath
-        ? err.instancePath.slice(1).replace(/\//g, ".")
-        : err.params?.missingProperty || "unknown";
-
-      return {
-        field,
-        message: err.message,
-        value: err.data,
-      };
-    });
-
-    return reply.code(400).send({
-      statusCode: 400,
-      error: "Validation Error",
-      message: `Invalid ${error.validationContext}: ${details.map((d) => d.field).join(", ")}`,
-      details,
-    });
-  }
-
-  // Handle other errors...
-  throw error;
-});
-```
-
-## Error Cause Chain
-
-Preserve error chains for debugging:
-
-```typescript
-app.get("/complex-operation", async (request) => {
-  try {
-    await step1();
-  } catch (error) {
-    const wrapped = new Error("Step 1 failed", { cause: error });
-    wrapped.statusCode = 500;
-    throw wrapped;
-  }
-});
-
-// In error handler, log the full chain
-app.setErrorHandler((error, request, reply) => {
-  // Log error with cause chain
-  let current = error;
-  const chain = [];
-  while (current) {
-    chain.push({
-      message: current.message,
-      code: current.code,
-      stack: current.stack,
-    });
-    current = current.cause;
-  }
-
-  request.log.error({ errorChain: chain }, "Request failed");
-
-  reply.code(error.statusCode || 500).send({
-    error: error.message,
-  });
-});
-```
-
-## Plugin-Scoped Error Handlers
-
-Set error handlers at the plugin level:
-
-```typescript
-app.register(
-  async function apiRoutes(fastify) {
-    // This error handler only applies to routes in this plugin
-    fastify.setErrorHandler((error, request, reply) => {
-      request.log.error({ err: error }, "API error");
-
-      reply.code(error.statusCode || 500).send({
-        error: {
-          code: error.code || "API_ERROR",
-          message: error.message,
-        },
-      });
-    });
-
-    fastify.get("/data", async () => {
-      throw new Error("API-specific error");
-    });
-  },
-  { prefix: "/api" },
-);
-```
-
-## Graceful Error Recovery
-
-Handle errors gracefully without crashing:
-
-```typescript
-app.get("/resilient", async (request, reply) => {
-  const results = await Promise.allSettled([
-    fetchPrimaryData(),
-    fetchSecondaryData(),
-    fetchOptionalData(),
-  ]);
-
-  const [primary, secondary, optional] = results;
-
-  if (primary.status === "rejected") {
-    // Primary data is required
-    throw new Error("Primary data unavailable");
-  }
-
-  return {
-    data: primary.value,
-    secondary: secondary.status === "fulfilled" ? secondary.value : null,
-    optional: optional.status === "fulfilled" ? optional.value : null,
-    warnings: results.filter((r) => r.status === "rejected").map((r) => r.reason.message),
-  };
-});
-```
+For aggregating endpoints, use `Promise.allSettled` and degrade: throw only if the required source failed, return `null` + a `warnings` array for optional sources. Don't let one optional upstream take down the whole response.

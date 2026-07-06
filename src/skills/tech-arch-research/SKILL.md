@@ -1,6 +1,6 @@
 ---
 name: tech-arch-research
-description: Deep technical research for architecture and implementation solutions, including dependency risk analysis, remediation plans, migration options, and design decisions. Use when asked to investigate technical risks, compare options, propose architectures, or produce plans (ADR/RFC/markdown).
+description: "Use when asked to investigate technical risks, compare options, propose architectures, plan migrations or dependency upgrades, or produce ADR/RFC/plan documents - including CVE and dependency risk analysis."
 ---
 
 # Tech Architecture Research
@@ -40,18 +40,8 @@ description: Deep technical research for architecture and implementation solutio
 - Default format: Markdown with short headings and checklists.
 - Separate facts (evidence) from hypotheses (assumptions).
 - For each recommendation, include: scope, changes, risks, tests, and rollout.
-- Avoid speculation; if unsure, add a follow-up action to verify.
 
-## Suggested deliverables
-
-- Problem statement and current-state evidence
-- Options matrix (benefits, risks, effort)
-- Recommended remediation plan (phased)
-- Validation/testing plan
-- Rollback/contingency plan
-- Open questions and required decisions
-
-## Templated structure (use when helpful)
+## Output structure (canonical)
 
 ```
 # Title
@@ -77,8 +67,3 @@ description: Deep technical research for architecture and implementation solutio
 
 ## Open questions
 ```
-
-## Notes
-
-- Keep the narrative concise; focus on actionable steps.
-- If a repository has specific commands or policies, align validation steps to them.
