@@ -1,0 +1,8 @@
+{
+  "name": "voice-notify",
+  "version": "1.0.0",
+  "description": "Speaks Claude Code session events out loud with a distinct voice per event class (turn done, decision needed, goal complete, subagent finished)",
+  "author": {
+    "name": "Bartosz Malec"
+  }
+}
