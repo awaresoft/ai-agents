@@ -1,0 +1,8 @@
+{
+  "name": "warp-tab-title",
+  "version": "1.0.0",
+  "description": "Keeps the Warp tab title and git branch indicator in sync with the Claude Code session cwd (worktree-aware)",
+  "author": {
+    "name": "Bartosz Malec"
+  }
+}

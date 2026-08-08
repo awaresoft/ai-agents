@@ -1,0 +1,8 @@
+{
+  "name": "statusline",
+  "version": "1.0.0",
+  "description": "Custom Claude Code statusline: branch, dir, model, context/rate-limit usage, Linear ticket link, caveman/ponytail badges",
+  "author": {
+    "name": "Bartosz Malec"
+  }
+}
