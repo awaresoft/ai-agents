@@ -61,8 +61,14 @@ if [ -z "$TICKET" ] && [ -n "$DIR" ]; then
   TICKET=$(git -C "$DIR" log -1 --format=%s 2>/dev/null | grep -oE '[A-Z]+-[0-9]+' | head -1)
 fi
 if [ -n "$TICKET" ]; then
-  url="https://linear.app/beautomated/issue/${TICKET}"
-  segs+=("$(printf '\033]8;;%s\033\\\033[1;34m%s\033[0m\033]8;;\033\\' "$url" "$TICKET")")
+  # Linear workspace slug: env override, else per-repo `git config linear.workspace`.
+  WORKSPACE="${LINEAR_WORKSPACE:-$(git -C "$DIR" config --get linear.workspace 2>/dev/null)}"
+  if [ -n "$WORKSPACE" ]; then
+    url="https://linear.app/${WORKSPACE}/issue/${TICKET}"
+    segs+=("$(printf '\033]8;;%s\033\\\033[1;34m%s\033[0m\033]8;;\033\\' "$url" "$TICKET")")
+  else
+    segs+=($'\033[1;34m'"${TICKET}${RESET}")
+  fi
 fi
 
 # --- logged-in account ---

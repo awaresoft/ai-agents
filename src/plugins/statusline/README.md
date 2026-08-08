@@ -5,7 +5,7 @@ Claude Code plugin: custom statusline (branch, dir, model, context/rate-limit us
 Format (1 line, `│` separators, no icons, ANSI colors):
 
 ```
-devel │ doEstimate │ Fable 5 │ ctx 62% │ 5h 34% · 7d 61% │ BEA-535 [CAVEMAN][PONYTAIL]
+main │ my-project │ Fable 5 │ ctx 62% │ 5h 34% · 7d 61% │ ABC-535 [CAVEMAN][PONYTAIL]
 ```
 
 Segments and sources:
@@ -15,10 +15,18 @@ Segments and sources:
 3. **model** — `model.display_name`.
 4. **ctx** — `context_window.used_percentage` (native field); green <60, yellow <85, red ≥85.
 5. **limits** — `rate_limits.five_hour/seven_day.used_percentage` (native; Pro/Max only, absent until first API response → segment hidden). Same color thresholds.
-6. **ticket** — branch regex `[A-Z]+-[0-9]+` wins, fallback last commit subject; rendered as OSC 8 hyperlink to `https://linear.app/beautomated/issue/<ID>`.
+6. **ticket** — branch regex `[A-Z]+-[0-9]+` wins, fallback last commit subject. Rendered as an OSC 8 hyperlink to `https://linear.app/<workspace>/issue/<ID>` when a workspace is configured (see below); otherwise plain bold text.
 7. **badges** — chains existing caveman/ponytail statusline scripts (latest installed version glob under `~/.claude/plugins/cache`).
 
 Every segment guarded; missing data = segment omitted, never a crashed line. No subprocess slower than git; no network, no ccusage (native `rate_limits` made it redundant).
+
+## Configuration
+
+Linear workspace slug (for the ticket hyperlink) is not hardcoded — resolved per invocation:
+
+1. `LINEAR_WORKSPACE` env var, if set.
+2. else `git config --get linear.workspace` in the current repo (set once per repo: `git config linear.workspace <slug>`).
+3. else no hyperlink — ticket still shown as plain text.
 
 ## Install
 
