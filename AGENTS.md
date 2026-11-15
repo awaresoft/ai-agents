@@ -7,31 +7,28 @@ pnpm test           # Run vitest tests
 pnpm lint           # Run ESLint
 ```
 
-## Default Orchestration
+## Council
 
-`it-task-master` is the default orchestrator. It evaluates task type and routes execution to the most relevant specialist agent.
+The `council` skill is the default way to solve non-trivial problems and run code reviews. The main thread seats at least two specialists (backend-architect, frontend-architect, principal-engineer, devops-engineer, secops-auditor, ddd-reviewer) by what the task touches, briefs them in parallel, and `principal-engineer` rules when two of them disagree.
 
 ## Available Agents
 
-All 15 agents are available on all platforms (Claude, Codex, OpenCode).
+All 12 agents are available on all platforms (Claude, Codex, OpenCode).
 
 | Agent | Primary Purpose |
 |-------|-----------------|
-| **it-task-master** | Default orchestrator — evaluates tasks and routes to the best specialist agent. |
 | **backend-architect** | DDD, microservices design, and high-level backend strategy. |
 | **backend-engineer** | Implementation of services, APIs, and domain logic in Node.js/TS. |
 | **frontend-architect** | Web architecture, data flow, and frontend project structure. |
 | **frontend-engineer** | UI implementation, component development, and frontend testing. |
 | **ux-ui-architect** | Design systems, accessibility, and high-performance mobile-first interfaces. |
-| **ecommerce-architect** | E-commerce platform selection, pre-solution discovery, and platform-vs-custom boundary decisions; hands off to backend-architect. |
 | **devops-engineer** | Infrastructure as Code, CI/CD, and cloud orchestration. |
 | **e2e-test-engineer** | Playwright-based end-to-end testing and quality assurance. |
 | **secops-auditor** | Security architecture, threat analysis, and OWASP compliance. |
 | **seo-inspector** | Technical SEO, content architecture, AI search readiness, and discoverability audits. |
-| **content-writer** | Technical blog strategy and writing with strong hooks, retention techniques, and SEO awareness. |
-| **principal-engineer** | Strategic technical leadership, mentoring, and cross-stack reviews. |
+| **principal-engineer** | Senior code/design review; chairs the council and rules on disagreements. |
+| **ddd-reviewer** | Read-only DDD and layering review: aggregates, invariants, repositories, ubiquitous language. |
 | **staff-engineer** | Cross-team coordination and solving complex technical bottlenecks. |
-| **team-manager** | People management, project delivery, and organizational health. |
 
 ## Available Skills
 
@@ -39,6 +36,7 @@ Skills are shared across all platforms.
 
 ### Engineering & Architecture
 
+- **council** — Seats 2-5 specialist agents by task type (review, bug, design, infra, security); principal-engineer rules on conflicts.
 - **code-review** — Standards-based analysis of pull requests and code changes.
 - **tech-arch-research** — Deep-dive analysis into technical architectures, risks, and implementation options.
 - **documentation** — Technical writing support for guides, references, and structured docs.
@@ -73,7 +71,7 @@ When creating or modifying agents or skills, follow [docs/authoring-standards.md
 - Add source content to `src/agents/{name}.md` (no frontmatter).
 - Add metadata to `agents.config.json` with `description`, `color`, and any platform `overrides`.
 - Run `pnpm build` to generate platform output.
-- Use `it-task-master` as the default orchestrator, then hand off to specialist agents by task type.
+- Use the `council` skill for non-trivial problems and reviews; hand implementation to engineer agents.
 
 ## Tool/Library Documentation Verification (Context7 MCP)
 

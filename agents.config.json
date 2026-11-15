@@ -38,18 +38,11 @@
         "opencode": { "temperature": 0.4 }
       }
     },
-    "content-writer": {
-      "description": "Use this agent to plan, write, and refine technical blog content that earns attention, builds trust, and drives action. It specializes in developer-facing articles, thought leadership, tutorials, comparison pieces, and product-adjacent educational content with strong hooks, clear structure, and search-aware execution.",
-      "color": "orange",
+    "ddd-reviewer": {
+      "description": "Use this agent to REVIEW code changes for Domain-Driven Design and layering correctness: aggregate boundaries, invariants enforced inside entities, inward-pointing dependencies, repository interfaces vs concrete classes, mappers, DTOs at boundaries, and ubiquitous language. Use PROACTIVELY after backend domain changes and as the DDD seat of the council skill. Read-only. Not for designing new boundaries (backend-architect) or general code review (principal-engineer).",
+      "color": "blue",
       "overrides": {
-        "opencode": { "model": "openai/gpt-5.4", "temperature": 0.3 }
-      }
-    },
-    "ecommerce-architect": {
-      "description": "Use this agent for e-commerce architecture decisions: selecting a commerce platform (commercetools, Shopify/Hydrogen, Medusa, Adobe Commerce, Shopware), running pre-solution discovery (business model, scale, catalog, pricing, markets, integrations, TCO), and fixing the platform-vs-custom boundary before backend-architect designs services. Not for implementation.",
-      "color": "magenta",
-      "overrides": {
-        "claude": { "model": "opus" }
+        "claude": { "model": "opus", "tools": "Read, Grep, Glob, Bash" }
       }
     },
     "devops-engineer": {
@@ -76,15 +69,8 @@
         "opencode": { "temperature": 0.4 }
       }
     },
-    "it-task-master": {
-      "description": "Use this agent as the primary orchestrator for multi-step work. It decomposes the user's request, delegates to the best specialized agents, coordinates dependencies, integrates results, and verifies completion.",
-      "color": "orange",
-      "overrides": {
-        "opencode": { "model": "openai/gpt-5.4" }
-      }
-    },
     "principal-engineer": {
-      "description": "Use this agent to REVIEW existing code, designs, or architecture at a senior level: code reviews, design reviews, and risk assessment of proposed changes. Returns a verdict with severity-ranked findings. For designing new solutions or migration plans use staff-engineer instead.",
+      "description": "Use this agent to REVIEW existing code, designs, or architecture at a senior level: code reviews, design reviews, and risk assessment of proposed changes. Returns a verdict with severity-ranked findings. Chairs the council skill and rules when two agents disagree. For designing new solutions or migration plans use staff-engineer instead.",
       "color": "red",
       "overrides": {
         "claude": { "model": "opus" }
@@ -111,11 +97,6 @@
       "overrides": {
         "claude": { "model": "opus" }
       }
-    },
-    "team-manager": {
-      "description": "Use this agent when you need guidance on people management, team leadership, project delivery, performance management, or organizational challenges. Examples include team planning, handling conflicts, performance reviews, stakeholder communication, resource allocation, or career development strategies.",
-      "color": "green",
-      "overrides": {}
     },
     "ux-ui-architect": {
       "description": "Use this agent for visual and interaction design decisions: design systems, design tokens, component blueprints, user flows, accessibility specs, and Figma design extraction. Not for writing functional code, choosing frameworks, or state management.",
