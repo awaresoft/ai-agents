@@ -11,6 +11,7 @@ V_DECISION="${CC_VOICE_DECISION:-Daniel}"
 V_GOAL="${CC_VOICE_GOAL:-Good News}"
 V_SUBAGENT="${CC_VOICE_SUBAGENT:-Whisper}"
 RATE="${CC_VOICE_RATE:-190}"
+VOLUME="${CC_VOICE_VOLUME:-0.2}" # 0.0-1.0, relative to system volume
 MIN="${CC_VOICE_MIN_SECONDS:-60}"
 
 speak() {
@@ -22,7 +23,7 @@ speak() {
     echo "$1|$2"
     return
   fi
-  say -v "$1" -r "$RATE" "$2" >/dev/null 2>&1 &
+  say -v "$1" -r "$RATE" "[[volm $VOLUME]] $2" >/dev/null 2>&1 &
 }
 
 STATE_ROOT="${CC_VOICE_STATE_DIR:-${TMPDIR:-/tmp}/cc-voice}"
@@ -93,10 +94,10 @@ USAGE
     ;;
   demo)
     CC_VOICE_DRY=0
-    say -v "$V_STOP" -r "$RATE" "Done."
-    say -v "$V_DECISION" -r "$RATE" "Permission needed."
-    say -v "$V_GOAL" -r "$RATE" "All tasks complete."
-    say -v "$V_SUBAGENT" -r "$RATE" "Agent finished."
+    say -v "$V_STOP" -r "$RATE" "[[volm $VOLUME]] Done."
+    say -v "$V_DECISION" -r "$RATE" "[[volm $VOLUME]] Permission needed."
+    say -v "$V_GOAL" -r "$RATE" "[[volm $VOLUME]] All tasks complete."
+    say -v "$V_SUBAGENT" -r "$RATE" "[[volm $VOLUME]] Agent finished."
     exit 0
     ;;
   selftest)

@@ -6,7 +6,7 @@ Warp's `⑂ branch` tab indicator follows the pane cwd via OSC 7, which the shel
 
 Title format:
 
-- worktree: `🔴 <project> <TICKET> <worktree-dir>` (e.g. `🔴 doEstimate BEA-525 BEA-525-room-layer`)
+- worktree: `🔴 <project> <TICKET> <worktree-dir>` (e.g. `🔴 my-project ABC-525 ABC-525-room-layer`)
 - on `devel`: `🟡 no worktree <TICKET> devel`
 - other branch: `🟢 no worktree <TICKET> <branch>`
 
