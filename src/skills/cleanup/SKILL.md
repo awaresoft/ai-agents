@@ -1,24 +1,24 @@
 ---
 name: cleanup
-description: "Use when the Mac feels slow, fans spin, load is high, swap grows, dev ports (3xxx/8xxx/13xxx/18xxx) stay occupied by dead dev servers, Warp leaves orphaned processes, or stale git worktrees with merged branches still run services. Also for running as a recurring watchdog via /loop."
+description: "Use when the Mac feels slow, fans spin, load is high, swap grows, dev ports (3xxx/8xxx/13xxx/18xxx) stay occupied by dead dev servers, closed terminal tabs leave orphaned processes, or stale git worktrees with merged branches still run services. Also for running as a recurring watchdog via /loop."
 ---
 
 # Cleanup
 
-Fast macOS bottleneck triage + safe reclaim of CPU/RAM from dead dev-stack processes, orphaned Warp children, idle port listeners, and stale git worktrees.
+Fast macOS bottleneck triage + safe reclaim of CPU/RAM from dead dev-stack processes, orphaned terminal children, idle port listeners, and stale git worktrees.
 
 ## Safety policy (non-negotiable)
 
 | Action | Policy |
 |---|---|
-| Kill orphaned dev process (PPID=1, parent was Warp/dev server, idle) | Auto, then report what was killed |
+| Kill orphaned dev process (PPID=1, parent was a terminal/ADE tab or dev server, idle) | Auto, then report what was killed |
 | Kill zombie / defunct process | Auto |
 | Kill idle port listener (0 established conns, ~0% CPU, hours old, dev port) | Auto |
 | Kill anything with recent CPU activity, unknown parentage, or non-dev command | Ask first, show evidence |
 | `git worktree remove`, `git branch -d` | ALWAYS ask first, even when fully merged |
 | Anything touching Docker containers, MongoDB data, system daemons | Ask first |
 
-Never kill: the current shell's ancestry (check `ps -o ppid= -p $$` chain), Warp itself, Docker Desktop VM, browsers, IDEs. `kill -TERM` first; `-KILL` only if still alive after ~5s.
+Never kill: the current shell's ancestry (check `ps -o ppid= -p $$` chain), the terminal/ADE app itself, Docker Desktop VM, browsers, IDEs. `kill -TERM` first; `-KILL` only if still alive after ~5s.
 
 ## Step 1 — Triage (10 seconds, run all at once)
 
@@ -36,7 +36,7 @@ Verdict: load > cores → CPU hunt. Free < 30% OR swap used > 4 GB → RAM hunt 
 # Top offenders by CPU (use -m for RAM hunt)
 ps -Axo pid,ppid,pcpu,pmem,etime,command -r | head -15
 
-# Warp/dev orphans: reparented to launchd (PPID=1). Anchor on the binary basename,
+# Terminal/dev orphans: reparented to launchd (PPID=1). Anchor on the binary basename,
 # NOT a loose grep - system XPC paths match loose patterns.
 ps -Axo pid,ppid,etime,command | awk '$2==1' \
   | grep -E '(^|/)(node|npm|pnpm|turbo|next-server|zsh|bash|vite|esbuild|jest|tsc|playwright|Chromium|mongod)( |$)' \
@@ -50,7 +50,7 @@ lsof -nP -iTCP:<port> -sTCP:ESTABLISHED   # empty = nobody talks to it
 ps -o pcpu,etime,command -p <pid>          # 0.0 CPU + old = idle squatter
 ```
 
-Warp-specific: healthy Warp children have Warp's PID as PPID (`pgrep -x stable` for Warp.app). Any dev process whose PPID is 1 but whose command line points into a project dir is an orphan from a closed tab — prime kill candidate.
+Terminal-agnostic: healthy processes chain up to the terminal/ADE that spawned them (walk `ps -o ppid= -p <pid>`). Any dev process whose PPID is 1 but whose command line points into a project dir is an orphan from a closed tab — prime kill candidate.
 
 Orphans come as trees (sh → pnpm → tsx → node); TERM on the root sh does NOT reap grandchildren. Collect and kill every PID in the tree:
 

@@ -119,9 +119,6 @@
       },
       "GEMINI.md": {
         "header": "# GEMINI.md\n\nThis file provides guidance to Gemini when working with code in this repository."
-      },
-      "WARP.md": {
-        "header": "# WARP.md\n\nThis file provides guidance to Warp when working with code in this repository."
       }
     }
   }

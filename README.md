@@ -36,7 +36,7 @@ pnpm test           # Run vitest tests
 pnpm lint           # Run ESLint
 ```
 
-`pnpm build` also generates tool-specific docs (`CLAUDE.md`, `GEMINI.md`, `WARP.md`) from `AGENTS.md`.
+`pnpm build` also generates tool-specific docs (`CLAUDE.md`, `GEMINI.md`) from `AGENTS.md`.
 
 ## Council
 
@@ -182,4 +182,4 @@ AGENTS.md             # Source body for generated tool docs
 
 Generated output (gitignored):
 - `.claude/agents/`, `.claude/skills/`, `.codex/`, `.config/opencode/`
-- `CLAUDE.md`, `GEMINI.md`, `WARP.md`
+- `CLAUDE.md`, `GEMINI.md`
